@@ -17,9 +17,6 @@ class ViewController: UIViewController {
         self.view.isMultipleTouchEnabled = true
         print(self.view.isMultipleTouchEnabled)
         // Do any additional setup after loading the view, typically from a nib.
-        
-        
-        
     }
     
     func reset(){
@@ -157,14 +154,36 @@ class ViewController: UIViewController {
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        print("Count is up to \(touches.count)")
+    func detectNumber(){
         
+        var String = 0
+        if(Stroke1){
+            String += 1
+        }
+        
+        if(Stroke2){
+            String += 2
+        }
+        
+        if(Stroke3){
+            String += 4
+        }
+        
+        if(Stroke4){
+            String += 8
+        }
+        
+        /* Numbers */
+        self.labelLetter.text = "\(String)"
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        //print("Count is up to \(touches.count)")
         
         for obj in touches {
             let touch = obj as UITouch
             let location = touch.location(in: self.view)
-            print(location)
+            //print(location)
         }
     }
     
@@ -173,7 +192,7 @@ class ViewController: UIViewController {
     }
     
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
+        print("A cancel event happened")
     }
 
 

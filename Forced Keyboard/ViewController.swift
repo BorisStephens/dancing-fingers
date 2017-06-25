@@ -26,32 +26,9 @@ class ViewController: UIViewController {
         Stroke4 = false
         
         self.drawCircle(x: 20, color: UIColor.red.cgColor,    stroke: false)
-        self.drawCircle(x: 40, color: UIColor.green.cgColor,  stroke: false)
-        self.drawCircle(x: 60, color: UIColor.blue.cgColor,   stroke: false)
-        self.drawCircle(x: 80, color: UIColor.orange.cgColor, stroke: false)
-    }
-    
-    func drawCircle(x:Int,color: CGColor, stroke: Bool){
-        /* Draw Circle */
-        let shapeLayer = CAShapeLayer()
-        
-        // Sequence
-        let circlePath = UIBezierPath(
-            arcCenter: CGPoint(x:x,y: 25),
-            radius: CGFloat(8),
-            startAngle: CGFloat(0),
-            endAngle:CGFloat(Double.pi * 2),
-            clockwise: true)
-        shapeLayer.path = circlePath.cgPath
-        shapeLayer.strokeColor = color
-        shapeLayer.lineWidth = 3.0
-        shapeLayer.fillColor = UIColor.white.cgColor
-        if(stroke == true){
-            shapeLayer.fillColor = color
-        }
-        
-        // Add the cirlces
-        self.view.layer.addSublayer(shapeLayer)
+        self.drawCircle(x: 140, color: UIColor.green.cgColor,  stroke: false)
+        self.drawCircle(x: 260, color: UIColor.blue.cgColor,   stroke: false)
+        self.drawCircle(x: 380, color: UIColor.orange.cgColor, stroke: false)
     }
     
     @IBOutlet weak var labelLetter: UILabel!
@@ -69,7 +46,7 @@ class ViewController: UIViewController {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
-        let threashold:CGFloat = 0.02
+        let threashold:CGFloat = 1.0
         for(index, touch) in touches.enumerated() {
             
             if #available(iOS 9.0, *) {
@@ -82,20 +59,32 @@ class ViewController: UIViewController {
                     if force > threashold && index == 0 {
                         Stroke1 = true
                     }
+                    if force < threashold && index == 0 {
+                        Stroke1 = false
+                    }
                     
                     // Second
                     if force > threashold && index == 1 {
                         Stroke2 = true
+                    }
+                    if force < threashold && index == 1 {
+                        Stroke2 = false
                     }
                     
                     // Third
                     if force > threashold && index == 2 {
                         Stroke3 = true
                     }
+                    if force < threashold && index == 2 {
+                        Stroke3 = false
+                    }
                     
                     // Fourth
                     if force > threashold && index == 3 {
                         Stroke4 = true
+                    }
+                    if force < threashold && index == 2 {
+                        Stroke4 = false
                     }
                 }
             }
@@ -107,7 +96,7 @@ class ViewController: UIViewController {
         }
         
         
-        self.detectLetter()
+        self.detectNumber()
         
     }
     
@@ -194,7 +183,33 @@ class ViewController: UIViewController {
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         print("A cancel event happened")
     }
-
-
+    
+    
+    
+    
+    /* DRAWING */
+    func drawCircle(x:Int,color: CGColor, stroke: Bool){
+        /* Draw Circle */
+        let shapeLayer = CAShapeLayer()
+        
+        // Sequence
+        let circlePath = UIBezierPath(
+            arcCenter: CGPoint(x:x,y: 25),
+            radius: CGFloat(8),
+            startAngle: CGFloat(0),
+            endAngle:CGFloat(Double.pi * 2),
+            clockwise: true)
+        shapeLayer.path = circlePath.cgPath
+        shapeLayer.strokeColor = color
+        shapeLayer.lineWidth = 3.0
+        shapeLayer.fillColor = UIColor.white.cgColor
+        if(stroke == true){
+            shapeLayer.fillColor = color
+        }
+        
+        // Add the cirlces
+        self.view.layer.addSublayer(shapeLayer)
+    }
+    
 }
 

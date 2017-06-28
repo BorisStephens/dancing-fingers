@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549041F03DFBB001D25B7 /* AppDelegate.swift */; };
+		67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* ViewController.swift */; };
+		67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
+		67E5490C1F03DFBB001D25B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67E5490A1F03DFBB001D25B7 /* Main.storyboard */; };
 		67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */; };
 		67FD9D7A1EFFB0F200DF4ABB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D791EFFB0F200DF4ABB /* ViewController.swift */; };
 		67FD9D7D1EFFB0F200DF4ABB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */; };
@@ -15,6 +19,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		67E549021F03DFBB001D25B7 /* Track Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Track Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		67E549041F03DFBB001D25B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		67E549061F03DFBB001D25B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		67E549081F03DFBB001D25B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		67E5490B1F03DFBB001D25B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		67E5490D1F03DFBB001D25B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Track_Keyboard.entitlements; sourceTree = "<group>"; };
 		67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forced Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67FD9D791EFFB0F200DF4ABB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -25,6 +36,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		67E548FF1F03DFBB001D25B7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		67FD9D711EFFB0F200DF4ABB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -35,10 +53,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		67E549031F03DFBB001D25B7 /* Track Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				67E549041F03DFBB001D25B7 /* AppDelegate.swift */,
+				67E549061F03DFBB001D25B7 /* ViewController.swift */,
+				67E549081F03DFBB001D25B7 /* Assets.xcassets */,
+				67E5490A1F03DFBB001D25B7 /* Main.storyboard */,
+				67E5490D1F03DFBB001D25B7 /* Info.plist */,
+				67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */,
+			);
+			path = "Track Keyboard";
+			sourceTree = "<group>";
+		};
 		67FD9D6B1EFFB0F200DF4ABB = {
 			isa = PBXGroup;
 			children = (
 				67FD9D761EFFB0F200DF4ABB /* Forced Keyboard */,
+				67E549031F03DFBB001D25B7 /* Track Keyboard */,
 				67FD9D751EFFB0F200DF4ABB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -47,6 +79,7 @@
 			isa = PBXGroup;
 			children = (
 				67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */,
+				67E549021F03DFBB001D25B7 /* Track Keyboard.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -67,6 +100,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		67E549011F03DFBB001D25B7 /* Track Keyboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 67E549111F03DFBB001D25B7 /* Build configuration list for PBXNativeTarget "Track Keyboard" */;
+			buildPhases = (
+				67E548FE1F03DFBB001D25B7 /* Sources */,
+				67E548FF1F03DFBB001D25B7 /* Frameworks */,
+				67E549001F03DFBB001D25B7 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Track Keyboard";
+			productName = "Track Keyboard";
+			productReference = 67E549021F03DFBB001D25B7 /* Track Keyboard.app */;
+			productType = "com.apple.product-type.application";
+		};
 		67FD9D731EFFB0F200DF4ABB /* Forced Keyboard */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67FD9D861EFFB0F200DF4ABB /* Build configuration list for PBXNativeTarget "Forced Keyboard" */;
@@ -94,6 +144,9 @@
 				LastUpgradeCheck = 0900;
 				ORGANIZATIONNAME = "Luke Stephens";
 				TargetAttributes = {
+					67E549011F03DFBB001D25B7 = {
+						CreatedOnToolsVersion = 9.0;
+					};
 					67FD9D731EFFB0F200DF4ABB = {
 						CreatedOnToolsVersion = 9.0;
 					};
@@ -113,11 +166,21 @@
 			projectRoot = "";
 			targets = (
 				67FD9D731EFFB0F200DF4ABB /* Forced Keyboard */,
+				67E549011F03DFBB001D25B7 /* Track Keyboard */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		67E549001F03DFBB001D25B7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */,
+				67E5490C1F03DFBB001D25B7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		67FD9D721EFFB0F200DF4ABB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -131,6 +194,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		67E548FE1F03DFBB001D25B7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */,
+				67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		67FD9D701EFFB0F200DF4ABB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -143,6 +215,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		67E5490A1F03DFBB001D25B7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				67E5490B1F03DFBB001D25B7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -162,6 +242,42 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		67E5490F1F03DFBB001D25B7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Track Keyboard/Track_Keyboard.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q6477K9VD4;
+				INFOPLIST_FILE = "Track Keyboard/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		67E549101F03DFBB001D25B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Track Keyboard/Track_Keyboard.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q6477K9VD4;
+				INFOPLIST_FILE = "Track Keyboard/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
 		67FD9D841EFFB0F200DF4ABB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -296,6 +412,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		67E549111F03DFBB001D25B7 /* Build configuration list for PBXNativeTarget "Track Keyboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				67E5490F1F03DFBB001D25B7 /* Debug */,
+				67E549101F03DFBB001D25B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Forced Keyboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -312,6 +436,7 @@
 				67FD9D881EFFB0F200DF4ABB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

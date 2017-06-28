@@ -6,14 +6,22 @@
 //  Copyright © 2017 Luke Stephens. All rights reserved.
 //
 
-// Next: Make sequenceing work with remembering finger positions
+// Make sequenceing work with remembering finger positions
 // [•] Where is the finger 1...5?
 // [•] Did finger rise up, which one was it 1...5?
 // [•] Did finger go back down, which one was it 1...5?
 // [•] Calculate up to 5
+// Make sequenceing work with remembering finger positions
 // Bug: Sequence goes out of whack, Cause Dictionary -> Swap To Array
 
 import Cocoa
+struct BinaryFinger {
+    let id: String
+    let factor: Int
+    
+    // println() should print just the unit name:
+    var description: String { return id }
+}
 
 class MacViewController: NSViewController {
     
@@ -21,7 +29,8 @@ class MacViewController: NSViewController {
     var InitalTouches:Array<NSTouch> = []
     var CurrentStateAlive:Dictionary<String, Bool> = [:]
     
-    func doMagic(){
+    
+    func doMagicNumbers(){
         
         // Calculating Binary Finger
         var number:Int = 0
@@ -35,10 +44,38 @@ class MacViewController: NSViewController {
         }
         
         // No Fingers Used, Then Reset Finger Positions
-//        CurrentStateAlive.removeAll()
+        //        CurrentStateAlive.removeAll()
         
         // User Interface Update
         self.testing.stringValue = String(number)
+        
+    }
+    
+    func doMagicWords(){
+        
+        // Calculating Binary Finger
+        var number:Int = 0
+        let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
+        self.CurrentStateAlive.enumerated().forEach { (arg) in
+            let (index,active) = arg
+            if(active.value){
+                let addition = pwrInt(2,index)
+                number += addition
+            }
+        }
+        
+        let anArray = ["Hello","My","Name","Is","Luke James Stephens","And","This","Me","Doing","A","Test","Of","How","Fast","I","Can","Type","On","Keyboard"]
+        
+        // No Fingers Used, Then Reset Finger Positions
+        //        CurrentStateAlive.removeAll()
+        
+        // User Interface Update
+        self.testing.stringValue = anArray[number]
+        
+    }
+    
+    func doMagic(){
+        self.doMagicWords()
     }
     
     

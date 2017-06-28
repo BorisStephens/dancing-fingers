@@ -16,7 +16,6 @@ class ViewController: UIViewController {
         print(self.view.isMultipleTouchEnabled)
         // Do any additional setup after loading the view, typically from a nib.
         
-        @IBOutlet weak var results: NSTextField!
         //        let keyboardHands = ForcedKeyboardGestureRecognizer(target: self, action: #selector(reset), threshold: 0.5)
 //        self.view.addGestureRecognizer(keyboardHands)
         

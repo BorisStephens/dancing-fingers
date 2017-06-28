@@ -10,17 +10,38 @@ import UIKit
 
 class ViewController: UIViewController {
     
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.isMultipleTouchEnabled = true
         print(self.view.isMultipleTouchEnabled)
         // Do any additional setup after loading the view, typically from a nib.
         
-        let keyboardHands = ForcedKeyboardGestureRecognizer(target: self, action: #selector(reset), threshold: 0.5)
-        self.view.addGestureRecognizer(keyboardHands)
+//        let keyboardHands = ForcedKeyboardGestureRecognizer(target: self, action: #selector(reset), threshold: 0.5)
+//        self.view.addGestureRecognizer(keyboardHands)
         
+        let keyboardHandPans = ForcedKeyboardGestureRecognizer(target: self, action: #selector(test), threshold: 0.65)
+        self.view.addGestureRecognizer(keyboardHandPans)
+    }
+    
+    @objc func test(sender: ForcedKeyboardGestureRecognizer? = nil){
+        
+        
+        let keyboardOutput = Array(sender!.keyboardOutput)
+        
+        /* Graphics */
+        self.drawCircle(x: 20, color: UIColor.red.cgColor,     stroke: (keyboardOutput[0] == "0" ? true : false))
+        self.drawCircle(x: 140, color: UIColor.green.cgColor,  stroke: (keyboardOutput[1] == "0" ? true : false))
+        self.drawCircle(x: 260, color: UIColor.blue.cgColor,   stroke: (keyboardOutput[2] == "0" ? true : false))
+        self.drawCircle(x: 380, color: UIColor.orange.cgColor, stroke: (keyboardOutput[3] == "0" ? true : false))
+        
+        /* Numbers */
+        let finger1 = (keyboardOutput[0] == "0" ? 1 : 0)
+        let finger2 = (keyboardOutput[1] == "0" ? 2 : 0)
+        let finger3 = (keyboardOutput[2] == "0" ? 4 : 0)
+        let finger4 = (keyboardOutput[3] == "0" ? 8 : 0)
+        let number:Int = finger1+finger2+finger3+finger4
+        // print("State is now \(String(describing: sender?.keyboardOutput)) producing \(number)")
+        self.labelLetter.text = "\(number)"
     }
     
     @objc func reset(){
@@ -74,11 +95,12 @@ class ViewController: UIViewController {
 import UIKit.UIGestureRecognizerSubclass
 
 // MARK: GestureRecognizer
-class ForcedKeyboardGestureRecognizer: UIGestureRecognizer
+class ForcedKeyboardGestureRecognizer: UIPanGestureRecognizer
 {
     var vibrateOnDeepPress = false
     let threshold: CGFloat
     
+    public var keyboardOutput = ""
     private var deepPressed: Bool = false
     private var Stroke1 = false
     private var Stroke2 = false
@@ -93,26 +115,16 @@ class ForcedKeyboardGestureRecognizer: UIGestureRecognizer
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent) {
         do {
-            print("Forced Key Touches Begun")
-            handleTouch(touches:touches)
+            // DEBUG: print("Forced Key Touches Begun \(String(describing: event.allTouches?.count))")
+            handleTouch(touches:event.allTouches!)
         }
-    }
-    
-    override func touchesEstimatedPropertiesUpdated(_ touches: Set<UITouch>) {
-        print("Forced Key Estimate Attempt")
-        handleTouch(touches: touches)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent) {
         do {
-            print("Forced Key Supposed Movement")
-            handleTouch(touches:touches)
+           // print("Forced Key Supposed Movement")
+            handleTouch(touches:event.allTouches!)
         }
-    }
-    
-    override func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent) {
-        print("Forced Key Supposed Movement")
-        handlePress(touches: presses)
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent) {
@@ -121,12 +133,13 @@ class ForcedKeyboardGestureRecognizer: UIGestureRecognizer
         state = deepPressed ? UIGestureRecognizerState.ended : UIGestureRecognizerState.failed
         
         deepPressed = false
+        if event.allTouches!.count == 0 {
+            self.keyboardOutput = "0000"
+        }
+        // DEBUG: print("Forced Key Touches Ended \(String(describing: event.allTouches?.count))")
     }
     
     private func handleTouch(touches: Set<UITouch>){
-    }
-    
-    private func handlePress(touches: Set<UIPress>){
         state = UIGestureRecognizerState.began
         deepPressed = true
         
@@ -145,6 +158,7 @@ class ForcedKeyboardGestureRecognizer: UIGestureRecognizer
         }
         
         // MARK: Fingers, Check Them All
+        // TODO: Traitor, Index cannot be trusted. Use location to determine left to right sequence
         let threashold = self.threshold
         for(index, touch) in touches.enumerated() {
             let force = touch.force
@@ -172,7 +186,10 @@ class ForcedKeyboardGestureRecognizer: UIGestureRecognizer
         if(Stroke2){String += "1"} else {String += "0"}
         if(Stroke3){String += "1"} else {String += "0"}
         if(Stroke4){String += "1"} else {String += "0"}
-        print("\(String) Touches: \(touches.count)")
+        
+        // DEBUG: print("\(String) Touches: \(touches.count)")
+        
+        self.keyboardOutput = String
         return
     }
 }

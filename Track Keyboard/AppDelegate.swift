@@ -12,8 +12,16 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
 
-
+    @IBAction func doChangeMagicMode(_ sender: Any) {
+        if(MagicMode == "Counting"){
+           MagicMode = "Words"
+        } else {
+           MagicMode = "Counting"
+        }
+    }
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        
         // Insert code here to initialize your application
     }
 

@@ -34,7 +34,8 @@ struct BinaryFinger {
     var description: String { return touch.identity as! String }
 }
 
-var MagicMode = "Counting"
+var MagicMode = "Letters"
+var CurrentTouchState:Array<BinaryFinger> = []
 
 class MacViewController: NSViewController {
     
@@ -47,7 +48,7 @@ class MacViewController: NSViewController {
     var startTime = NSDate()
     var endTime = NSDate()
     
-    var CurrentTouchState:Array<BinaryFinger> = []
+    
     //public var MagicMode = "Counting"
     
     func doMagicNumbers(){
@@ -77,15 +78,32 @@ class MacViewController: NSViewController {
         
         let anArray = ["Hello","My","Name","Is","Luke James Stephens","And","This","Me","Doing","A","Test","Of","How","Fast","I","Can","Type","On","Keyboard"]
         
-        // User Interface Update
-        self.testing.stringValue = anArray[number]
+        // Try Numbers In Array That Exist
+        if(number <= anArray.count){
+            // User Interface Refelct the outcome
+            self.testing.stringValue = anArray[number]
+        }
+    }
+    
+    func doMagicLetters(){
+        // Calculating Binary Finger
+        let number = self.binaryFingerCalculation() - 1
+        let str = "abcdefghijklmnopqrstuvwxyz"
         
+        let alphabets = Array(str)
+        if(number <= alphabets.count && number >= 0){
+            // User Interface Refelct the outcome
+            self.testing.stringValue = "\(alphabets[number])"
+        }
     }
     
     func doMagic(){
         
+        let doTrack = false
         // Do Tracking?
-        doTrackingAssit()
+        if(doTrack){
+            doTrackingAssit()
+        }
         
         // Getting Started Bro
         if(CurrentTouchState.count < 4){
@@ -97,6 +115,9 @@ class MacViewController: NSViewController {
             if(MagicMode == "Words"){
                 self.doMagicWords()
             }
+            if(MagicMode == "Letters"){
+                self.doMagicLetters()
+            }
         }
     }
     
@@ -104,7 +125,7 @@ class MacViewController: NSViewController {
         // Calculating Binary Finger
         var number:Int = 0
         let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
-        self.CurrentTouchState.enumerated().forEach { (arg) in
+        CurrentTouchState.enumerated().forEach { (arg) in
             let (index,finger) = arg
             if(finger.alive){
                 let addition = pwrInt(2,index)
@@ -118,6 +139,7 @@ class MacViewController: NSViewController {
     
     override func touchesMoved(with event: NSEvent) {
         
+        /*
         let touches = event.touches(matching: NSTouch.Phase.any, in: self.view)
         touches.forEach { (touch) in
             var closestTouch: Int = -1
@@ -142,9 +164,8 @@ class MacViewController: NSViewController {
                 CurrentTouchState[closestTouch].distance = (distanceBest)
             }
         }
-        
+        */
         doMagic()
-        doTrackingAssit()
     }
     
     func doTrackingAssit(){
@@ -157,6 +178,13 @@ class MacViewController: NSViewController {
     }
     
     override func touchesBegan(with event: NSEvent) {
+        
+        // Reset
+        CurrentTouchState.enumerated().forEach({ (arg) in
+            var (index, tracking) = arg
+            CurrentTouchState[index].alive = false
+            //tracking.alive = false
+        })
         
         // Check, New Finger
         let allTouchesCount = event.allTouches().count
@@ -177,10 +205,8 @@ class MacViewController: NSViewController {
                 CurrentTouchState.enumerated().forEach({ (arg) in
                     
                     let (index, tracking) = arg
-                    // Version 2
-                    let xDist = (tracking.touch.normalizedPosition.x - touch.normalizedPosition.x)
-                    let yDist = (tracking.touch.normalizedPosition.y - touch.normalizedPosition.y)
-                    let distance = sqrt((xDist * xDist) + (yDist * yDist))
+                    // Version 3
+                    let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
                     if(distance < distanceBest){
                         closestTouch = index
                         distanceBest = distance
@@ -201,6 +227,8 @@ class MacViewController: NSViewController {
         let touches = event.touches(matching: NSTouch.Phase.ended, in: self.view)
         touches.forEach { (touch) in
             
+            //print("End for finger unknwon which is in a state of \(touch.phase)")
+            
             var closestTouch: Int = -1
             var distanceBest:CGFloat = CGFloat(1000.00)
             
@@ -208,13 +236,8 @@ class MacViewController: NSViewController {
             CurrentTouchState.enumerated().forEach({ (arg) in
                 
                 let (index, tracking) = arg
-                
-                
-                // Version 2
-                let xDist = (tracking.touch.normalizedPosition.x - touch.normalizedPosition.x)
-                let yDist = (tracking.touch.normalizedPosition.y - touch.normalizedPosition.y)
-                let distance = sqrt((xDist * xDist) + (yDist * yDist))
-                
+                // Version 3
+                let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
                 if(distance < distanceBest){
                     closestTouch = index
                     distanceBest = distance
@@ -223,7 +246,7 @@ class MacViewController: NSViewController {
             
             // Update Who Arrived Back + Check To See If Resting Or Dead
             if(closestTouch != -1){
-                CurrentTouchState[closestTouch].alive = false
+                //CurrentTouchState[closestTouch].alive = false
                 CurrentTouchState[closestTouch].distance = (distanceBest)
             }
         }
@@ -240,6 +263,12 @@ class MacViewController: NSViewController {
         didSet {
             // Update the view, if already loaded.
         }
+    }
+}
+
+extension CGPoint {
+    func distanceToPoint(p:CGPoint) -> CGFloat {
+        return sqrt(pow((p.x - x), 2) + pow((p.y - y), 2))
     }
 }
 

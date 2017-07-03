@@ -34,8 +34,10 @@ struct BinaryFinger {
     var description: String { return touch.identity as! String }
 }
 
-var MagicMode = "Letters"
+/* Core Varaibles */
+var MagicMode = "KeyboardBasic"
 var CurrentTouchState:Array<BinaryFinger> = []
+var MagicNumber = 0
 
 class MacViewController: NSViewController {
     
@@ -47,7 +49,6 @@ class MacViewController: NSViewController {
     let timerMode = true
     var startTime = NSDate()
     var endTime = NSDate()
-    
     
     //public var MagicMode = "Counting"
     
@@ -85,13 +86,54 @@ class MacViewController: NSViewController {
         }
     }
     
+    func doMagicKeyboardBareMinimum(){ // Really need a bigger trackpad
+        //     A...Z, 26 (+2)
+        // Backspace, 1
+        // Spacebar , 2
+        
+        // Calculating Binary Finger
+        let number = (self.binaryFingerCalculation() - 1)
+        MagicNumber = number
+        let str = "abcdefghijklmnopqrstuvwxyz"
+        
+        if(number == 2){ // Space
+            self.testing.stringValue = "\(self.testing.stringValue) "
+            return
+        }
+        if(number == 1){ // Backspace
+            var outcome = self.testing.stringValue
+            
+            // String has something to remove?
+            if(outcome.count > 0){
+                outcome = outcome.substring(to: outcome.index(before: outcome.endIndex))
+                self.testing.stringValue = "\(outcome)"
+                return
+            }
+        }
+        
+        // Letters
+        let alphabets = Array(str)
+        if(number <= (alphabets.count + 2) && number >= 2){
+            // User Interface Append Letter
+            let alphabetNumber = number - 3
+            self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
+            return
+        }
+    }
+    
     func doMagicLetters(){
         // Calculating Binary Finger
         let number = self.binaryFingerCalculation() - 1
         let str = "abcdefghijklmnopqrstuvwxyz"
         
         let alphabets = Array(str)
-        if(number <= alphabets.count && number >= 0){
+        if(number <= (alphabets.count-1) && number >= 0){
+            let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+            // Verna talks once
+            if("\(alphabets[number])" != self.testing.stringValue){
+                mySynth.startSpeaking("\(alphabets[number])")
+            }
+            
             // User Interface Refelct the outcome
             self.testing.stringValue = "\(alphabets[number])"
         }
@@ -117,6 +159,9 @@ class MacViewController: NSViewController {
             }
             if(MagicMode == "Letters"){
                 self.doMagicLetters()
+            }
+            if(MagicMode == "KeyboardBasic"){
+                self.doMagicKeyboardBareMinimum()
             }
         }
     }
@@ -165,7 +210,7 @@ class MacViewController: NSViewController {
             }
         }
         */
-        doMagic()
+        // doMagic()
     }
     
     func doTrackingAssit(){
@@ -181,9 +226,8 @@ class MacViewController: NSViewController {
         
         // Reset
         CurrentTouchState.enumerated().forEach({ (arg) in
-            var (index, tracking) = arg
+            let (index, _) = arg
             CurrentTouchState[index].alive = false
-            //tracking.alive = false
         })
         
         // Check, New Finger
@@ -250,7 +294,7 @@ class MacViewController: NSViewController {
                 CurrentTouchState[closestTouch].distance = (distanceBest)
             }
         }
-        doMagic()
+//        doMagic()
     }
     
     override func viewDidLoad() {
@@ -277,7 +321,7 @@ extension CGPoint {
 //    print("    Location, \(touch.normalizedPosition) \(touch.phase)")
 //}
 
-//func doMagicKeyboard(){ // Really need a bigger trackpad
+//func doMagicKeyboardFull(){ // Really need a bigger trackpad
 //    // 78
 //}
 //

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class iPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,11 +20,123 @@ class ViewController: UIViewController {
 //        self.view.addGestureRecognizer(keyboardHands)
         
         let keyboardHandPans = ForcedKeyboardGestureRecognizer(target: self, action: #selector(test), threshold: 0.65)
-        self.view.addGestureRecognizer(keyboardHandPans)
+        //self.view.addGestureRecognizer(keyboardHandPans)
+        self.doSequentialHaptics(input: "10000") // 1
+        //self.doSequentialHaptics(input: "01000") // 2
+        //self.doSequentialHaptics(input: "11000") // 3
+        
+        // Add on top
+        let touch = UITapGestureRecognizer(target: self, action: #selector(tapRequestDoSequentialHaptics))
+        touch.numberOfTapsRequired = 1
+        self.view.addGestureRecognizer(touch)
     }
     
-    @objc func test(sender: ForcedKeyboardGestureRecognizer? = nil){
+    @objc func tapRequestDoSequentialHaptics(){
+        doSequentialHaptics(input:"11000")
+    }
+    
+    @objc func doSequentialHaptics(input:String = "10000"){
         
+        // Prep the hardware
+        var generator = UIImpactFeedbackGenerator(style: .light)
+        generator.prepare()
+//        var feedbackGenerator = UISelectionFeedbackGenerator()
+//        feedbackGenerator.prepare()
+//        feedbackGenerator.selectionChanged()
+        
+        /* Loop All Characters And Send Feedback */
+        var lag = 0.100 // Miliseconds
+        for character in input.characters {
+            if(character == "0"){
+                DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
+                    generator = UIImpactFeedbackGenerator(style: .light)
+                    generator.impactOccurred()
+                }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
+                    generator = UIImpactFeedbackGenerator(style: .medium)
+                    generator.impactOccurred()
+                }
+            }
+            
+            // Add to lag
+            lag += 0.100
+        }
+    }
+    
+    var feedbackGenerator : UISelectionFeedbackGenerator? = nil
+    @IBAction func gestureHandler(_ sender: UIPanGestureRecognizer) {
+        
+        switch(sender.state) {
+        case .began:
+            
+            print("We are now panning")
+            
+            // Instantiate a new generator.
+            feedbackGenerator = UISelectionFeedbackGenerator()
+            
+            // Prepare the generator when the gesture begins.
+            feedbackGenerator?.prepare()
+            
+        case .changed:
+            
+            // Check to see if the selection has changed...
+            //if  myCustomHasSelectionChangedMethod(translationPoint: sender.translation(in: view)) {
+                
+                // Trigger selection feedback.
+                feedbackGenerator?.selectionChanged()
+                
+                // Keep the generator in a prepared state.
+                feedbackGenerator?.prepare()
+//            }
+            
+        case .cancelled, .ended, .failed:
+            
+            // Release the current generator.
+            feedbackGenerator = nil
+            
+        default:
+            // Do Nothing.
+            break
+        }}
+    
+    @objc func test(sender: UIPanGestureRecognizer! = nil){
+        
+        switch(sender.state) {
+        case .began:
+            
+            print("We are now panning")
+            
+            // Instantiate a new generator.
+            feedbackGenerator = UISelectionFeedbackGenerator()
+            
+            // Prepare the generator when the gesture begins.
+            feedbackGenerator?.prepare()
+            
+        case .changed:
+            
+            // Check to see if the selection has changed...
+            //if  myCustomHasSelectionChangedMethod(translationPoint: sender.translation(in: view)) {
+            
+            // Trigger selection feedback.
+            feedbackGenerator?.selectionChanged()
+            
+            // Keep the generator in a prepared state.
+            feedbackGenerator?.prepare()
+            //            }
+            
+        case .cancelled, .ended, .failed:
+            
+            // Release the current generator.
+            feedbackGenerator = nil
+            
+        default:
+            // Do Nothing.
+            break
+        }
+    }
+    
+    @objc func test2(sender: ForcedKeyboardGestureRecognizer? = nil){
         
         let keyboardOutput = Array(sender!.keyboardOutput)
         

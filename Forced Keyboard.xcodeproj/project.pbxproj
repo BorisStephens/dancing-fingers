@@ -12,7 +12,7 @@
 		67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
 		67E5490C1F03DFBB001D25B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67E5490A1F03DFBB001D25B7 /* Main.storyboard */; };
 		67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */; };
-		67FD9D7A1EFFB0F200DF4ABB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D791EFFB0F200DF4ABB /* ViewController.swift */; };
+		67FD9D7A1EFFB0F200DF4ABB /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D791EFFB0F200DF4ABB /* MainController.swift */; };
 		67FD9D7D1EFFB0F200DF4ABB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */; };
 		67FD9D7F1EFFB0F200DF4ABB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */; };
 		67FD9D821EFFB0F200DF4ABB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */; };
@@ -28,7 +28,7 @@
 		67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Track_Keyboard.entitlements; sourceTree = "<group>"; };
 		67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forced Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		67FD9D791EFFB0F200DF4ABB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		67FD9D791EFFB0F200DF4ABB /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		67FD9D7C1EFFB0F200DF4ABB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67FD9D811EFFB0F200DF4ABB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -88,7 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */,
-				67FD9D791EFFB0F200DF4ABB /* ViewController.swift */,
+				67FD9D791EFFB0F200DF4ABB /* MainController.swift */,
 				67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */,
 				67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */,
 				67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */,
@@ -207,7 +207,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				67FD9D7A1EFFB0F200DF4ABB /* ViewController.swift in Sources */,
+				67FD9D7A1EFFB0F200DF4ABB /* MainController.swift in Sources */,
 				67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -419,6 +419,7 @@
 				67E549101F03DFBB001D25B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Forced Keyboard" */ = {
 			isa = XCConfigurationList;

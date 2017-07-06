@@ -19,8 +19,8 @@ class iPhoneViewController: UIViewController {
         //        let keyboardHands = ForcedKeyboardGestureRecognizer(target: self, action: #selector(reset), threshold: 0.5)
 //        self.view.addGestureRecognizer(keyboardHands)
         
-        let keyboardHandPans = ForcedKeyboardGestureRecognizer(target: self, action: #selector(test), threshold: 0.65)
-        //self.view.addGestureRecognizer(keyboardHandPans)
+        let keyboardHandPans = ForcedKeyboardGestureRecognizer(target: self, action: #selector(test2), threshold: 0.65)
+        self.view.addGestureRecognizer(keyboardHandPans)
         self.doSequentialHaptics(input: "10000") // 1
         //self.doSequentialHaptics(input: "01000") // 2
         //self.doSequentialHaptics(input: "11000") // 3
@@ -54,51 +54,17 @@ class iPhoneViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
-                    generator = UIImpactFeedbackGenerator(style: .medium)
+                    generator = UIImpactFeedbackGenerator(style: .heavy)
                     generator.impactOccurred()
                 }
             }
             
             // Add to lag
-            lag += 0.100
+            lag += 0.200
         }
     }
     
     var feedbackGenerator : UISelectionFeedbackGenerator? = nil
-    @IBAction func gestureHandler(_ sender: UIPanGestureRecognizer) {
-        
-        switch(sender.state) {
-        case .began:
-            
-            print("We are now panning")
-            
-            // Instantiate a new generator.
-            feedbackGenerator = UISelectionFeedbackGenerator()
-            
-            // Prepare the generator when the gesture begins.
-            feedbackGenerator?.prepare()
-            
-        case .changed:
-            
-            // Check to see if the selection has changed...
-            //if  myCustomHasSelectionChangedMethod(translationPoint: sender.translation(in: view)) {
-                
-                // Trigger selection feedback.
-                feedbackGenerator?.selectionChanged()
-                
-                // Keep the generator in a prepared state.
-                feedbackGenerator?.prepare()
-//            }
-            
-        case .cancelled, .ended, .failed:
-            
-            // Release the current generator.
-            feedbackGenerator = nil
-            
-        default:
-            // Do Nothing.
-            break
-        }}
     
     @objc func test(sender: UIPanGestureRecognizer! = nil){
         
@@ -135,7 +101,7 @@ class iPhoneViewController: UIViewController {
             break
         }
     }
-    
+    var previousNumber = 0
     @objc func test2(sender: ForcedKeyboardGestureRecognizer? = nil){
         
         let keyboardOutput = Array(sender!.keyboardOutput)
@@ -154,6 +120,11 @@ class iPhoneViewController: UIViewController {
         let number:Int = finger1+finger2+finger3+finger4
         // print("State is now \(String(describing: sender?.keyboardOutput)) producing \(number)")
         self.labelLetter.text = "\(number)"
+        
+        if(previousNumber != number){
+            doSequentialHaptics(input: sender!.keyboardOutput)
+            previousNumber = number
+        }
     }
     
     @objc func reset(){

@@ -50,7 +50,26 @@ class MacViewController: NSViewController {
     var startTime = NSDate()
     var endTime = NSDate()
     
-    //public var MagicMode = "Counting"
+    @objc func doSequentialHaptics(input:String = "10000"){
+        
+        /* Loop All Characters And Send Feedback */
+        var lag = 0.100 // Miliseconds
+        for character in input.characters {
+            if(character == "0"){
+                DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
+                    NSHapticFeedbackManager.defaultPerformer.perform(NSHapticFeedbackManager.FeedbackPattern.generic, performanceTime: NSHapticFeedbackManager.PerformanceTime.now)
+                }
+            } else {
+                DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
+                    NSHapticFeedbackManager.defaultPerformer.perform(NSHapticFeedbackManager.FeedbackPattern.levelChange, performanceTime: NSHapticFeedbackManager.PerformanceTime.now)
+                }
+            }
+            
+            // Add to lag
+            lag += 0.200
+        }
+    }
+    
     
     func doMagicNumbers(){
         // User Interface Update
@@ -117,6 +136,10 @@ class MacViewController: NSViewController {
             // User Interface Append Letter
             let alphabetNumber = number - 3
             self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
+            // Haptic, Only On Change
+            let str = self.binaryFingerCalculationString()
+            print("Haptic Attempt, \(str)")
+            self.doSequentialHaptics(input:str)
             return
         }
     }
@@ -166,6 +189,7 @@ class MacViewController: NSViewController {
         }
     }
     
+    // Result Number
     func binaryFingerCalculation() -> Int{
         // Calculating Binary Finger
         var number:Int = 0
@@ -181,37 +205,24 @@ class MacViewController: NSViewController {
         return number
     }
     
-    
-    override func touchesMoved(with event: NSEvent) {
-        
-        /*
-        let touches = event.touches(matching: NSTouch.Phase.any, in: self.view)
-        touches.forEach { (touch) in
-            var closestTouch: Int = -1
-            var distanceBest:CGFloat = CGFloat(1000.00)
-            
-            // Where is everyone
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                
-                let (index, tracking) = arg
-                // Version 2
-                let xDist = (tracking.touch.normalizedPosition.x - touch.normalizedPosition.x)
-                let yDist = (tracking.touch.normalizedPosition.y - touch.normalizedPosition.y)
-                let distance = sqrt((xDist * xDist) + (yDist * yDist))
-                if(distance < distanceBest){
-                    closestTouch = index
-                    distanceBest = distance
-                }
-            })
-            
-            // Update Distance
-            if(closestTouch != -1){
-                CurrentTouchState[closestTouch].distance = (distanceBest)
+    // Binary Representation String
+    func binaryFingerCalculationString() -> String{
+        // Calculating Binary Finger
+        var number:String = ""
+        CurrentTouchState.enumerated().forEach { (arg) in
+            let (_,finger) = arg
+            if(finger.alive){
+                number = "\(number)1"
+            } else {
+                number = "\(number)0"
             }
         }
-        */
-        // doMagic()
+        //print("Current Binary Finger is \(number)")
+        return number
     }
+    
+    
+    override func touchesMoved(with event: NSEvent) {}
     
     func doTrackingAssit(){
         print("–– Finger Postions -–")

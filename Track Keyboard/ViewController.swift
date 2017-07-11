@@ -76,6 +76,9 @@ class MacViewController: NSViewController {
         let number = self.binaryFingerCalculation()
         doTimer(number:number)
         self.testing.stringValue = String(number)
+        
+        /* Numbers Game, User Interface Update */
+        UINumbersGame[number]?.backgroundColor = NSColor.green
     }
     
     func doTimer(number:Int){
@@ -113,7 +116,7 @@ class MacViewController: NSViewController {
         // Calculating Binary Finger
         let number = (self.binaryFingerCalculation() - 1)
         MagicNumber = number
-        let str = "abcdefghijklmnopqrstuvwxyz"
+        
         
         if(number == 2){ // Space
             self.testing.stringValue = "\(self.testing.stringValue) "
@@ -131,15 +134,21 @@ class MacViewController: NSViewController {
         }
         
         // Letters
+        let str = "abcdefghijklmnopqrstuvwxyz"
         let alphabets = Array(str)
         if(number <= (alphabets.count + 2) && number >= 2){
             // User Interface Append Letter
             let alphabetNumber = number - 3
+            let letter = alphabets[alphabetNumber]
             self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
             // Haptic, Only On Change
             let str = self.binaryFingerCalculationString()
             print("Haptic Attempt, \(str)")
             self.doSequentialHaptics(input:str)
+            
+            /* Letter Game, Update User Interface */
+            print("String is \(str)")
+            UILettersGame[letter]?.backgroundColor = NSColor.green
             return
         }
     }
@@ -308,16 +317,51 @@ class MacViewController: NSViewController {
 //        doMagic()
     }
     
+    var UINumbersGame: Dictionary<Int, NSText> = [:]
+    var UILettersGame: Dictionary<Character, NSText> = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.acceptsTouchEvents = true
         // Do any additional setup after loading the view.
+        
+        /* Numbers Game, User Interface */
+        for number in 1...15 {
+            let text = NSText(frame: NSMakeRect(CGFloat(27*number),20,25,20))
+                text.string = "\(number)"
+                text.backgroundColor = NSColor.red
+                text.isEditable = false
+            UINumbersGame[number] = text
+            self.view.addSubview(text)
+        }
+        
+        /* Letters Game, User Interface */
+        let str = "abcdefghijklmnopqrstuvwxyz"
+        let alphabets = Array(str)
+        for letter in alphabets {
+            let number = str.index(of: letter)
+            let text = NSText(frame: NSMakeRect(CGFloat(20*number!),20,25,0))
+                text.string = "\(letter)"
+                text.backgroundColor = NSColor.red
+                text.isEditable = false
+            self.view.addSubview(text)
+            UILettersGame[letter] = text
+        }
+        
     }
     
     override var representedObject: Any? {
         didSet {
             // Update the view, if already loaded.
         }
+    }
+}
+
+extension String {
+    public func index(of char: Character) -> Int? {
+        if let idx = characters.index(of: char) {
+            return characters.distance(from: startIndex, to: idx)
+        }
+        return nil
     }
 }
 

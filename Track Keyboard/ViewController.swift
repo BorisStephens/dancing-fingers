@@ -53,7 +53,7 @@ class MacViewController: NSViewController {
     @objc func doSequentialHaptics(input:String = "10000"){
         
         /* Loop All Characters And Send Feedback */
-        var lag = 0.100 // Miliseconds
+        var lag = 0.020 // Miliseconds
         for character in input.characters {
             if(character == "0"){
                 DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
@@ -66,7 +66,7 @@ class MacViewController: NSViewController {
             }
             
             // Add to lag
-            lag += 0.200
+            lag += lag
         }
     }
     
@@ -79,6 +79,13 @@ class MacViewController: NSViewController {
         
         /* Numbers Game, User Interface Update */
         UINumbersGame[number]?.backgroundColor = NSColor.green
+        
+        /* Numbers Game, User Interface Reset Number UI */
+        if(number == 31){
+            for (_, numberGame) in UINumbersGame {
+                numberGame.backgroundColor = NSColor.red
+            }
+        }
     }
     
     func doTimer(number:Int){
@@ -140,14 +147,17 @@ class MacViewController: NSViewController {
             // User Interface Append Letter
             let alphabetNumber = number - 3
             let letter = alphabets[alphabetNumber]
+            if(self.testing.stringValue == "Please add a finger, need 4 we have 3"){
+                self.testing.stringValue = ""
+            }
             self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
+            
             // Haptic, Only On Change
             let str = self.binaryFingerCalculationString()
             print("Haptic Attempt, \(str)")
             self.doSequentialHaptics(input:str)
             
             /* Letter Game, Update User Interface */
-            print("String is \(str)")
             UILettersGame[letter]?.backgroundColor = NSColor.green
             return
         }
@@ -367,6 +377,7 @@ extension String {
 
 extension CGPoint {
     func distanceToPoint(p:CGPoint) -> CGFloat {
+        //return sqrt(pow((p.x - x), 2))
         return sqrt(pow((p.x - x), 2) + pow((p.y - y), 2))
     }
 }

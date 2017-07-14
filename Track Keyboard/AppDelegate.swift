@@ -13,11 +13,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
 
     @IBAction func doChangeMagicMode(_ sender: Any) {
-        if(MagicMode == "Counting"){
-           MagicMode = "Words"
-        } else {
-           MagicMode = "Counting"
-        }
+        MagicMode = "KeyboardBasic"
+    }
+    @IBAction func doChangeMagicModeCounting(_ sender: Any) {
+        MagicMode = "Counting"
+    }
+    
+    @IBAction func doResetFingerLocations(_ sender: Any) {
+        CurrentTouchState.removeAll()
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

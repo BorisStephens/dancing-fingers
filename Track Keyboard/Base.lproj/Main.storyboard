@@ -23,15 +23,20 @@
                                             </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="VOq-y0-SEH"/>
-                                        <menuItem title="Preferences…" keyEquivalent="," id="BOF-NM-1cW">
+                                        <menuItem title="Reset Finger Locations" keyEquivalent="r" id="BOF-NM-1cW">
                                             <connections>
-                                                <action selector="doChangeMagicMode:" target="Voe-Tx-rLC" id="3U1-W7-xBZ"/>
+                                                <action selector="doResetFingerLocations:" target="Voe-Tx-rLC" id="fum-oI-ptp"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem isSeparatorItem="YES" id="wFC-TO-SCJ"/>
-                                        <menuItem title="Services" id="NMo-om-nkz">
-                                            <modifierMask key="keyEquivalentModifierMask"/>
-                                            <menu key="submenu" title="Services" systemMenu="services" id="hz9-B4-Xy5"/>
+                                        <menuItem title="Keyboard Mode" keyEquivalent="k" id="Rnz-xy-Rdc">
+                                            <connections>
+                                                <action selector="doChangeMagicMode:" target="Voe-Tx-rLC" id="5Ge-pq-KnI"/>
+                                            </connections>
+                                        </menuItem>
+                                        <menuItem title="Numbers Mode" keyEquivalent="n" id="nbR-Ea-cbl">
+                                            <connections>
+                                                <action selector="doChangeMagicModeCounting:" target="Voe-Tx-rLC" id="zTf-fS-Im3"/>
+                                            </connections>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="4je-JR-u6R"/>
                                         <menuItem title="Hide Track Keyboard" keyEquivalent="h" id="Olw-nP-bQN">

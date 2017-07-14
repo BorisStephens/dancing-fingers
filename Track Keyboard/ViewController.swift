@@ -35,7 +35,7 @@ struct BinaryFinger {
 }
 
 /* Core Varaibles */
-var MagicMode = "KeyboardBasic"
+var MagicMode = "Counting"
 var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
 
@@ -125,11 +125,11 @@ class MacViewController: NSViewController {
         MagicNumber = number
         
         
-        if(number == 2){ // Space
+        if(number == 1){ // Space
             self.testing.stringValue = "\(self.testing.stringValue) "
             return
         }
-        if(number == 1){ // Backspace
+        if(number == 0){ // Backspace
             var outcome = self.testing.stringValue
             
             // String has something to remove?
@@ -143,9 +143,10 @@ class MacViewController: NSViewController {
         // Letters
         let str = "abcdefghijklmnopqrstuvwxyz"
         let alphabets = Array(str)
-        if(number <= (alphabets.count + 2) && number >= 2){
+        if(number <= (alphabets.count + 1) && number >= 2){
             // User Interface Append Letter
-            let alphabetNumber = number - 3
+            let alphabetNumber = number - 2
+            print(" Hello \(alphabetNumber)")
             let letter = alphabets[alphabetNumber]
             if(self.testing.stringValue == "Please add a finger, need 4 we have 3"){
                 self.testing.stringValue = ""
@@ -183,7 +184,7 @@ class MacViewController: NSViewController {
     
     func doMagic(){
         
-        let doTrack = false
+        let doTrack = true
         // Do Tracking?
         if(doTrack){
             doTrackingAssit()
@@ -378,7 +379,7 @@ extension String {
 extension CGPoint {
     func distanceToPoint(p:CGPoint) -> CGFloat {
         //return sqrt(pow((p.x - x), 2))
-        return sqrt(pow((p.x - x), 2) + pow((p.y - y), 2))
+        return (pow((p.x - x), 2) + pow((p.y - y), 2))
     }
 }
 

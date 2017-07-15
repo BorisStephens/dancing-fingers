@@ -184,12 +184,6 @@ class MacViewController: NSViewController {
     
     func doMagic(){
         
-        let doTrack = true
-        // Do Tracking?
-        if(doTrack){
-            doTrackingAssit()
-        }
-        
         // Getting Started Bro
         if(CurrentTouchState.count < 4){
             self.testing.stringValue = "Please add a finger, need 4 we have \(CurrentTouchState.count)"
@@ -206,6 +200,12 @@ class MacViewController: NSViewController {
             if(MagicMode == "KeyboardBasic"){
                 self.doMagicKeyboardBareMinimum()
             }
+        }
+        
+        let doTrack = true
+        // Do Tracking?
+        if(doTrack){
+            doTrackingAssit()
         }
     }
     
@@ -246,11 +246,16 @@ class MacViewController: NSViewController {
     
     func doTrackingAssit(){
         print("–– Finger Postions -–")
+        
+        var StringToDisplay = ""
         CurrentTouchState.enumerated().forEach({ (arg) in
             
             let (index, tracking) = arg
             print("  Finger \(index) in state of \(tracking.alive) tracking \(tracking.distance)")
+            StringToDisplay = "\(StringToDisplay)\nFinger \(index) \(tracking.touch.normalizedPosition)"
         })
+        
+        self.testing.stringValue = "\(self.testing.stringValue) \n \(StringToDisplay)"
     }
     
     override func touchesBegan(with event: NSEvent) {
@@ -379,7 +384,9 @@ extension String {
 extension CGPoint {
     func distanceToPoint(p:CGPoint) -> CGFloat {
         //return sqrt(pow((p.x - x), 2))
-        return (pow((p.x - x), 2) + pow((p.y - y), 2))
+        //Version 2 more specific return (pow((p.x - x), 2) + pow((p.y - y), 2))
+        // Version 3 return (pow((p.x - x), 2))
+        return sqrt(pow((p.x - x), 2) + pow((p.y - y), 2))
     }
 }
 

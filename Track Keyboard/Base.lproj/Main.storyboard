@@ -728,7 +728,7 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="42e-Sw-y2l">
                                 <rect key="frame" x="-2" y="241" width="484" height="180"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" controlSize="mini" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Multiline Label" id="VrO-xI-lBm">
+                                <textFieldCell key="cell" controlSize="mini" enabled="NO" allowsUndo="NO" sendsActionOnEndEditing="YES" alignment="center" title="Please touch the trackpad with finger 1" id="VrO-xI-lBm">
                                     <font key="font" metaFont="system" size="26"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>

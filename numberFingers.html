@@ -1,0 +1,21 @@
+<html>
+
+<style>
+.leftHanded{
+	transform: scaleX(-1);
+}
+</style>
+
+<div id='number'>
+  <object type="image/svg+xml" data="fingersNumber.svg?1" style="width:200px;"></object>
+</div>
+
+</html>
+
+<script>
+for(var i=2;i<32;i++){
+	Image =  document.getElementsByTagName('object')[0].cloneNode();
+	Image.data = "fingersNumber.svg?" + i;
+	document.getElementById('number').appendChild(Image);
+}
+</script>

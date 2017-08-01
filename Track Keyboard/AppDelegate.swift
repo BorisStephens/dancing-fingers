@@ -11,7 +11,10 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-
+    @IBAction func doChangeSynthesizeVoice(_ sender: Any) {
+        SynthesizeVoice = !SynthesizeVoice
+    }
+    
     @IBAction func doChangeMagicMode(_ sender: Any) {
         MagicMode = "KeyboardBasic"
     }

@@ -35,9 +35,11 @@ struct BinaryFinger {
 }
 
 /* Core Varaibles */
-var MagicMode = "Counting"
+var MagicMode = "KeyboardBasic"
 var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
+var BufferTimestamp:Date? = nil
+var SynthesizeVoice:Bool = true
 
 class MacViewController: NSViewController {
     
@@ -90,15 +92,49 @@ class MacViewController: NSViewController {
     
     func doTimer(number:Int){
         if(timerMode){
-            if(number == 31){
+            
+            /* Behaviour with Counting */
+            if(number == 31 && MagicMode == "Counting"){
                 startTime = NSDate()
                 self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
             }
-            if(number == 15){
+            if(number == 15 && MagicMode == "Counting"){
                 self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
+            }
+            
+            /* Behaviour with Keyboard: Finish Counting when all the letters are done */
+            if(allLettersAreDone() && MagicMode == "KeyboardBasic"){
+                self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
+                return
+            }
+            /* A was just pressed probably */
+            if(letterIsDone(letter: "A") && !letterIsDone(letter: "B") && MagicMode == "KeyboardBasic" && number == 3){
+                startTime = NSDate()
+                self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
+                return
             }
             self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
         }
+    }
+    
+    func letterIsDone(letter:Character) -> Bool{
+        var lettersAllDone = true
+        if(UILettersGame[letter]?.backgroundColor !== NSColor.green){
+            lettersAllDone = false
+        }
+        return lettersAllDone
+    }
+    
+    func allLettersAreDone() -> Bool{
+        let str = "abcdefghijklmnopqrstuvwxyz"
+        let alphabets = Array(str)
+        var lettersAllDone = true
+        for letter in alphabets {
+            if(UILettersGame[letter]?.backgroundColor !== NSColor.green){
+                lettersAllDone = false
+            }
+        }
+        return lettersAllDone
     }
     
     func doMagicWords(){
@@ -122,8 +158,8 @@ class MacViewController: NSViewController {
         
         // Calculating Binary Finger
         let number = (self.binaryFingerCalculation() - 1)
+        doTimer(number:number)
         MagicNumber = number
-        
         
         if(number == 1){ // Space
             self.testing.stringValue = "\(self.testing.stringValue) "
@@ -160,6 +196,14 @@ class MacViewController: NSViewController {
             
             /* Letter Game, Update User Interface */
             UILettersGame[letter]?.backgroundColor = NSColor.green
+            
+            /* Speak */
+            if(SynthesizeVoice){
+                let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                // Verna talks once
+                mySynth.startSpeaking("\(letter)")
+            }
+                
             return
         }
     }
@@ -202,7 +246,7 @@ class MacViewController: NSViewController {
             }
         }
         
-        let doTrack = true
+        let doTrack = false
         // Do Tracking?
         if(doTrack){
             doTrackingAssit()
@@ -404,5 +448,9 @@ extension CGPoint {
 //}
 //
 //func doMagicDJ(){ // Map sounds... wow... that'll be quite a thing...
+//
+//}
+//
+//func doMagicGesturePathWords(){ // Map sounds... wow... that'll be quite a thing...
 //
 //}

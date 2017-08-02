@@ -676,10 +676,20 @@
                                     <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rpA-Ks-pa0">
+                                <rect key="frame" x="380" y="429" width="102" height="11"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Expected Fingers: " id="H8i-9R-FpQ">
+                                    <font key="font" metaFont="miniSystem"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
                         </subviews>
                     </view>
                     <connections>
                         <outlet property="labelDurationAttempt" destination="smK-mq-eIr" id="nR5-WN-0Ay"/>
+                        <outlet property="labelExpectedFingerPositions" destination="rpA-Ks-pa0" id="cUP-pR-OUX"/>
                         <outlet property="testing" destination="42e-Sw-y2l" id="fLa-2F-Y19"/>
                     </connections>
                 </viewController>

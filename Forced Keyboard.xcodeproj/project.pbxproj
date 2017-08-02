@@ -252,7 +252,7 @@
 				DEVELOPMENT_TEAM = Q6477K9VD4;
 				INFOPLIST_FILE = "Track Keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -270,7 +270,7 @@
 				DEVELOPMENT_TEAM = Q6477K9VD4;
 				INFOPLIST_FILE = "Track Keyboard/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.12;
+				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;

@@ -6,6 +6,8 @@
 //  Copyright © 2017 Luke Stephens. All rights reserved.
 //
 
+
+
 // Make sequenceing work with remembering finger positions
 // [•] Where is the finger 1...5?
 // [•] Did finger rise up, which one was it 1...5?
@@ -38,14 +40,28 @@ struct BinaryFinger {
 var MagicMode = "KeyboardBasic"
 var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
-var BufferTimestamp:Date? = nil
+
+/* Keyboard Pattern Misfire Protection */
+var BufferTimestamp:Date? = Date()
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.35))!
 var SynthesizeVoice:Bool = true
+var MagicState: DancingKeyboardStates = .dormant
+struct DancingKeyboardStates: OptionSet {
+    let rawValue: Int
+    
+    static let waiting      = DancingKeyboardStates(rawValue: 1 << 0)
+    static let calculating  = DancingKeyboardStates(rawValue: 1 << 1)
+    static let dormant      = DancingKeyboardStates(rawValue: 1 << 2)
+    
+    static let all: DancingKeyboardStates = [.waiting, .calculating, .dormant]
+}
 
 class MacViewController: NSViewController {
     
     @IBOutlet weak var settingMagicMode: NSSegmentedControl!
     @IBOutlet weak var testing: NSTextField!
     @IBOutlet weak var labelDurationAttempt: NSTextField!
+    @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
     
     /* Timer Mode */
     let timerMode = true
@@ -151,13 +167,13 @@ class MacViewController: NSViewController {
         }
     }
     
-    func doMagicKeyboardBareMinimum(){ // Really need a bigger trackpad
+    func doMagicKeyboardBareMinimum(parameterNumber:Int){ // Really need a bigger trackpad
         //     A...Z, 26 (+2)
         // Backspace, 1
         // Spacebar , 2
         
         // Calculating Binary Finger
-        let number = (self.binaryFingerCalculation() - 1)
+        let number = (parameterNumber - 1)
         doTimer(number:number)
         MagicNumber = number
         
@@ -220,7 +236,6 @@ class MacViewController: NSViewController {
             if("\(alphabets[number])" != self.testing.stringValue){
                 mySynth.startSpeaking("\(alphabets[number])")
             }
-            
             // User Interface Refelct the outcome
             self.testing.stringValue = "\(alphabets[number])"
         }
@@ -242,11 +257,11 @@ class MacViewController: NSViewController {
                 self.doMagicLetters()
             }
             if(MagicMode == "KeyboardBasic"){
-                self.doMagicKeyboardBareMinimum()
+                self.binaryFingerCalculation()
             }
         }
         
-        let doTrack = false
+        let doTrack = true
         // Do Tracking?
         if(doTrack){
             doTrackingAssit()
@@ -254,19 +269,46 @@ class MacViewController: NSViewController {
     }
     
     // Result Number
-    func binaryFingerCalculation() -> Int{
-        // Calculating Binary Finger
-        var number:Int = 0
-        let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
-        CurrentTouchState.enumerated().forEach { (arg) in
-            let (index,finger) = arg
-            if(finger.alive){
-                let addition = pwrInt(2,index)
-                number += addition
+    func binaryFingerCalculation(requestAutomated:Bool = false) -> Int{
+        // Case: First Entry
+        if MagicState == .dormant{
+            MagicState = .waiting
+            // Checkback in 200 miliseconds
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
+                self.binaryFingerCalculation(requestAutomated: true)
             }
         }
-        //print("Current Binary Finger is \(number)")
-        return number
+        
+        // Case: Waiting Over
+        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated{
+            MagicState = .calculating
+            // Calculating Binary Finger
+            
+            var number:Int = 0
+            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
+            CurrentTouchState.enumerated().forEach { (arg) in
+                let (index,finger) = arg
+                if(finger.alive){
+                    let addition = pwrInt(2,index)
+                    number += addition
+                }
+            }
+            doMagicKeyboardBareMinimum(parameterNumber: number)
+            print("Current Binary Finger is \(number)")
+            MagicState = .dormant
+        }
+        
+        // Case: Already waiting within predetermined buffer window
+        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && !requestAutomated {
+            // Reset Timestamp as we now have a new finger state in the mix
+            BufferTimestamp = Date()
+        }
+        
+        
+        
+        
+        
+        return 0 // Static for now
     }
     
     // Binary Representation String
@@ -295,8 +337,8 @@ class MacViewController: NSViewController {
         CurrentTouchState.enumerated().forEach({ (arg) in
             
             let (index, tracking) = arg
-            print("  Finger \(index) in state of \(tracking.alive) tracking \(tracking.distance)")
-            StringToDisplay = "\(StringToDisplay)\nFinger \(index) \(tracking.touch.normalizedPosition)"
+            print("  Finger \(index) in state of \(tracking.alive) tracking \(tracking.distance) \(tracking.touch.pos(self.view))")
+            StringToDisplay = "\(StringToDisplay)\nFinger \(index) \(tracking.touch.pos(self.view)) "
         })
         
         self.testing.stringValue = "\(self.testing.stringValue) \n \(StringToDisplay)"
@@ -330,7 +372,10 @@ class MacViewController: NSViewController {
                     
                     let (index, tracking) = arg
                     // Version 3
-                    let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+//                    let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+                    
+                    // Version 4
+                    let distance = touch.pos(self.view).distanceToPoint(p: tracking.touch.pos(self.view))
                     if(distance < distanceBest){
                         closestTouch = index
                         distanceBest = distance
@@ -361,7 +406,9 @@ class MacViewController: NSViewController {
                 
                 let (index, tracking) = arg
                 // Version 3
-                let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+//                let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+                // Version 4 Config X,Y
+                let distance = touch.pos(self.view).distanceToPoint(p: tracking.touch.pos(self.view))
                 if(distance < distanceBest){
                     closestTouch = index
                     distanceBest = distance
@@ -454,3 +501,32 @@ extension CGPoint {
 //func doMagicGesturePathWords(){ // Map sounds... wow... that'll be quite a thing...
 //
 //}
+
+extension NSTouch {
+    /**
+     * Returns the relative position of the touch to the view
+     * NOTE: the normalizedTouch is the relative location on the trackpad. values range from 0-1. And are y-flipped
+     * TODO: debug if the touch area is working with a rect with a green stroke
+     */
+    func pos(_ view:NSView) -> CGPoint{
+        let w = view.frame.size.width
+        let h = view.frame.size.height
+        let touchPos:CGPoint = CGPoint(x:self.normalizedPosition.x,y:1 + (self.normalizedPosition.y * -1))/*flip the touch coordinates*/
+        let deviceSize:CGSize = self.deviceSize
+        let deviceRatio:CGFloat = deviceSize.width/deviceSize.height/*find the ratio of the device*/
+        let viewRatio:CGFloat = w/h
+        var touchArea:CGSize = CGSize(width:w,height:h)
+        /*Uniform-shrink the device to the view frame*/
+        if(deviceRatio > viewRatio){/*device is wider than view*/
+            touchArea.height = h/viewRatio
+            touchArea.width = w
+        }else if(deviceRatio < viewRatio){/*view is wider than device*/
+            touchArea.height = h
+            touchArea.width = w/deviceRatio
+        }/*else ratios are the same*/
+        let touchAreaPos:CGPoint = CGPoint(x:(w - touchArea.width)/2,y:(h - touchArea.height)/2)/*we center the touchArea to the View*/
+        let touchArea2 = CGPoint(x:touchPos.x * touchArea.width,y:touchPos.y * touchArea.height)
+        return CGPoint(x: touchAreaPos.x + touchArea2.x, y:touchAreaPos.y + touchArea2.y)
+    }
+}
+// Reference: Position https://stackoverflow.com/questions/3573276/know-the-position-of-the-finger-in-the-trackpad-under-mac-os-x

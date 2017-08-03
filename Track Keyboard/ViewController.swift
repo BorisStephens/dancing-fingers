@@ -40,12 +40,14 @@ struct BinaryFinger {
 var MagicMode = "KeyboardBasic"
 var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
+var doTrack = false
 
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.35))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.25))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
+
 struct DancingKeyboardStates: OptionSet {
     let rawValue: Int
     
@@ -55,11 +57,24 @@ struct DancingKeyboardStates: OptionSet {
     
     static let all: DancingKeyboardStates = [.waiting, .calculating, .dormant]
 }
+var MagicTrackingState: TrackingStates = .horizontal//.vertical//.distanceXY
+struct TrackingStates: OptionSet {
+    let rawValue: Int
+    
+    static let normalized = TrackingStates(rawValue: 1 << 0)
+    static let horizontal = TrackingStates(rawValue: 1 << 1)
+    static let vertical   = TrackingStates(rawValue: 1 << 2)
+    static let distanceXY = TrackingStates(rawValue: 1 << 3)
+}
 
 class MacViewController: NSViewController {
     
-    @IBOutlet weak var settingMagicMode: NSSegmentedControl!
+    var UINumbersGame: Dictionary<Int, NSText> = [:]
+    var UILettersGame: Dictionary<Character, NSText> = [:]
+    
+    
     @IBOutlet weak var testing: NSTextField!
+    @IBOutlet weak var settingMagicMode: NSSegmentedControl!
     @IBOutlet weak var labelDurationAttempt: NSTextField!
     @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
     
@@ -67,6 +82,28 @@ class MacViewController: NSViewController {
     let timerMode = true
     var startTime = NSDate()
     var endTime = NSDate()
+    
+    func trackingDistance(tracking:BinaryFinger, touch:NSTouch) -> CGFloat{
+        // Final Version
+        var distance:CGFloat = 0
+        switch MagicTrackingState {
+        case .horizontal:
+            distance =  tracking.touch.pos(self.view).x - touch.pos(self.view).x
+            break
+        case .vertical:
+            distance = touch.pos(self.view).y - tracking.touch.pos(self.view).y
+            break
+        case .normalized:
+            distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+            break
+        case .distanceXY:
+            distance = touch.pos(self.view).distanceToPoint(p: tracking.touch.pos(self.view))
+            break
+        default:
+            distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
+        }
+        return abs(distance)
+    }
     
     @objc func doSequentialHaptics(input:String = "10000"){
         
@@ -79,7 +116,7 @@ class MacViewController: NSViewController {
                 }
             } else {
                 DispatchQueue.main.asyncAfter(deadline: .now() + lag) {
-                    NSHapticFeedbackManager.defaultPerformer.perform(NSHapticFeedbackManager.FeedbackPattern.levelChange, performanceTime: NSHapticFeedbackManager.PerformanceTime.now)
+                NSHapticFeedbackManager.defaultPerformer.perform(NSHapticFeedbackManager.FeedbackPattern.levelChange, performanceTime: NSHapticFeedbackManager.PerformanceTime.now)
                 }
             }
             
@@ -261,7 +298,6 @@ class MacViewController: NSViewController {
             }
         }
         
-        let doTrack = true
         // Do Tracking?
         if(doTrack){
             doTrackingAssit()
@@ -344,13 +380,56 @@ class MacViewController: NSViewController {
         self.testing.stringValue = "\(self.testing.stringValue) \n \(StringToDisplay)"
     }
     
+    
+    
     override func touchesBegan(with event: NSEvent) {
         
-        // Reset
+        // Reset Refactor V2
+        
+        // Set em all to dead
         CurrentTouchState.enumerated().forEach({ (arg) in
             let (index, _) = arg
             CurrentTouchState[index].alive = false
         })
+        
+        // Bring alive
+        print("Bring Alive These bad boys")
+        let touches = event.allTouches()
+        touches.forEach { (touch) in
+            
+            var closestTouch: Int = -1
+            var distanceBest:CGFloat = CGFloat(1000.00)
+            
+            // Who is the Closest to specify who just arrived
+            CurrentTouchState.enumerated().forEach({ (arg) in
+                
+                let (index, tracking) = arg
+                
+                let distance = trackingDistance(tracking:tracking, touch:touch)
+                
+                if(distance < distanceBest){
+                    closestTouch = index
+                    distanceBest = distance
+                }
+                
+            })
+            if closestTouch != -1 {
+                CurrentTouchState[closestTouch].alive = true
+            }
+            
+            
+            
+            let phases = [
+                "1":"Began",
+                "2":"Moved",
+                "4":"Stationary",
+                "7":"Touching",
+                "8":"Ending",
+                "16":"Cancelled"
+            ]
+            let phase = phases["\(touch.phase.rawValue)"]
+            print(" 🖖+﹣ Finger\(closestTouch)  \(phase)")
+        }
         
         // Check, New Finger
         let allTouchesCount = event.allTouches().count
@@ -371,11 +450,9 @@ class MacViewController: NSViewController {
                 CurrentTouchState.enumerated().forEach({ (arg) in
                     
                     let (index, tracking) = arg
-                    // Version 3
-//                    let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
                     
-                    // Version 4
-                    let distance = touch.pos(self.view).distanceToPoint(p: tracking.touch.pos(self.view))
+                    let distance = trackingDistance(tracking:tracking, touch:touch)
+                    
                     if(distance < distanceBest){
                         closestTouch = index
                         distanceBest = distance
@@ -384,8 +461,9 @@ class MacViewController: NSViewController {
                 
                 // Update Who Arrived Back
                 if(closestTouch != -1){
-                    CurrentTouchState[closestTouch].alive = true
-                    CurrentTouchState[closestTouch].distance = (distanceBest)
+                    //CurrentTouchState[closestTouch].alive = true
+                    //CurrentTouchState[closestTouch].distance = (distanceBest)
+                    //print("🖖🏼＋ Finger \(closestTouch) touch down")
                 }
             }
         }
@@ -393,7 +471,7 @@ class MacViewController: NSViewController {
     }
     
     override func touchesEnded(with event: NSEvent) {
-        let touches = event.touches(matching: NSTouch.Phase.ended, in: self.view)
+        let touches = event.touches(matching: NSTouch.Phase.any, in: self.view)
         touches.forEach { (touch) in
             
             //print("End for finger unknwon which is in a state of \(touch.phase)")
@@ -405,10 +483,9 @@ class MacViewController: NSViewController {
             CurrentTouchState.enumerated().forEach({ (arg) in
                 
                 let (index, tracking) = arg
-                // Version 3
-//                let distance = touch.normalizedPosition.distanceToPoint(p: tracking.touch.normalizedPosition)
-                // Version 4 Config X,Y
-                let distance = touch.pos(self.view).distanceToPoint(p: tracking.touch.pos(self.view))
+                
+                let distance = trackingDistance(tracking:tracking, touch:touch)
+                
                 if(distance < distanceBest){
                     closestTouch = index
                     distanceBest = distance
@@ -417,15 +494,13 @@ class MacViewController: NSViewController {
             
             // Update Who Arrived Back + Check To See If Resting Or Dead
             if(closestTouch != -1){
-                //CurrentTouchState[closestTouch].alive = false
-                CurrentTouchState[closestTouch].distance = (distanceBest)
+//                print("🖖🏼﹣ Finger \(closestTouch) touch up \(phase)")
+//                CurrentTouchState[closestTouch].alive = false
+//                CurrentTouchState[closestTouch].distance = (distanceBest)
             }
         }
-//        doMagic()
     }
     
-    var UINumbersGame: Dictionary<Int, NSText> = [:]
-    var UILettersGame: Dictionary<Character, NSText> = [:]
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.acceptsTouchEvents = true

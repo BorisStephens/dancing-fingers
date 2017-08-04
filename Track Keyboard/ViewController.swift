@@ -45,7 +45,7 @@ var endTime = NSDate()
 
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.30))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.28))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
 
@@ -95,13 +95,18 @@ class MacViewController: NSViewController {
             }
             doMagicKeyboardBareMinimum(parameterNumber: number)
             print("Current Binary Finger is \(number)")
+            
+            // Reset Refactor V2 // Set em all to dead
             MagicState = .dormant
+            CurrentTouchState.enumerated().forEach({ (arg) in
+                let (index, _) = arg
+                CurrentTouchState[index].alive = false
+            })
             return 0
         }
         
         // Case: First Entry
         if MagicState.contains(.dormant) && !requestAutomated {
-            print("YES WE ARE NEW")
             MagicState = .waiting
             // Checkback in pre-defined amount of miliseconds
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
@@ -113,7 +118,6 @@ class MacViewController: NSViewController {
         if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated{
             MagicState = .calculating
             // Calculating Binary Finger
-            
             var number:Int = 0
             let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
             CurrentTouchState.enumerated().forEach { (arg) in
@@ -125,7 +129,13 @@ class MacViewController: NSViewController {
             }
             doMagicKeyboardBareMinimum(parameterNumber: number)
             print("Current Binary Finger is \(number)")
+            
+            // Reset Refactor V2 // Set em all to dead
             MagicState = .dormant
+            CurrentTouchState.enumerated().forEach({ (arg) in
+                let (index, _) = arg
+                CurrentTouchState[index].alive = false
+            })
         }
         
         // Case: Already waiting within predetermined buffer window user touched
@@ -139,13 +149,7 @@ class MacViewController: NSViewController {
     
     override func touchesBegan(with event: NSEvent) {
         
-        // Reset Refactor V2
         
-        // Set em all to dead
-        CurrentTouchState.enumerated().forEach({ (arg) in
-            let (index, _) = arg
-            CurrentTouchState[index].alive = false
-        })
         
         // Bring alive
         print("Bring Alive These bad boys")
@@ -477,6 +481,7 @@ class MacViewController: NSViewController {
         super.viewDidLoad()
         self.view.acceptsTouchEvents = true
         // Do any additional setup after loading the view.
+        self.view.wantsRestingTouches = true
         
         /* Numbers Game, User Interface */
         for number in 1...15 {

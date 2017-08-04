@@ -42,11 +42,19 @@ var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
 var doTrack = false
 
+/* Timer Mode */
+let timerMode = true
+var startTime = NSDate()
+var endTime = NSDate()
+
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.25))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.30))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
+
+var UINumbersGame: Dictionary<Int, NSText> = [:]
+var UILettersGame: Dictionary<Character, NSText> = [:]
 
 struct DancingKeyboardStates: OptionSet {
     let rawValue: Int
@@ -57,7 +65,7 @@ struct DancingKeyboardStates: OptionSet {
     
     static let all: DancingKeyboardStates = [.waiting, .calculating, .dormant]
 }
-var MagicTrackingState: TrackingStates = .horizontal//.vertical//.distanceXY
+var MagicTrackingState: TrackingStates = .distanceXY//.vertical//.distanceXY
 struct TrackingStates: OptionSet {
     let rawValue: Int
     
@@ -69,19 +77,10 @@ struct TrackingStates: OptionSet {
 
 class MacViewController: NSViewController {
     
-    var UINumbersGame: Dictionary<Int, NSText> = [:]
-    var UILettersGame: Dictionary<Character, NSText> = [:]
-    
-    
     @IBOutlet weak var testing: NSTextField!
     @IBOutlet weak var settingMagicMode: NSSegmentedControl!
     @IBOutlet weak var labelDurationAttempt: NSTextField!
     @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
-    
-    /* Timer Mode */
-    let timerMode = true
-    var startTime = NSDate()
-    var endTime = NSDate()
     
     func trackingDistance(tracking:BinaryFinger, touch:NSTouch) -> CGFloat{
         // Final Version
@@ -402,23 +401,16 @@ class MacViewController: NSViewController {
             
             // Who is the Closest to specify who just arrived
             CurrentTouchState.enumerated().forEach({ (arg) in
-                
                 let (index, tracking) = arg
-                
                 let distance = trackingDistance(tracking:tracking, touch:touch)
-                
                 if(distance < distanceBest){
                     closestTouch = index
                     distanceBest = distance
                 }
-                
             })
             if closestTouch != -1 {
                 CurrentTouchState[closestTouch].alive = true
             }
-            
-            
-            
             let phases = [
                 "1":"Began",
                 "2":"Moved",
@@ -448,11 +440,8 @@ class MacViewController: NSViewController {
                 
                 // Who is the Closest to specify who just arrived
                 CurrentTouchState.enumerated().forEach({ (arg) in
-                    
                     let (index, tracking) = arg
-                    
                     let distance = trackingDistance(tracking:tracking, touch:touch)
-                    
                     if(distance < distanceBest){
                         closestTouch = index
                         distanceBest = distance
@@ -481,11 +470,8 @@ class MacViewController: NSViewController {
             
             // Who is the Closest to specify who just departed
             CurrentTouchState.enumerated().forEach({ (arg) in
-                
                 let (index, tracking) = arg
-                
                 let distance = trackingDistance(tracking:tracking, touch:touch)
-                
                 if(distance < distanceBest){
                     closestTouch = index
                     distanceBest = distance

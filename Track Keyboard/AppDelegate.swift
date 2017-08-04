@@ -23,7 +23,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func doResetFingerLocations(_ sender: Any) {
+        // Finger Tracking
         CurrentTouchState.removeAll()
+        // Timer
+        startTime = NSDate()
+        // Numbers Game
+        for (_, numberGame) in UINumbersGame {
+            numberGame.backgroundColor = NSColor.red
+        }
+        // Letters Game
+        for (_, interface) in UILettersGame {
+            interface.backgroundColor = NSColor.red
+        }
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

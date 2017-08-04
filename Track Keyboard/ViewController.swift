@@ -6,8 +6,6 @@
 //  Copyright © 2017 Luke Stephens. All rights reserved.
 //
 
-
-
 // Make sequenceing work with remembering finger positions
 // [•] Where is the finger 1...5?
 // [•] Did finger rise up, which one was it 1...5?
@@ -22,8 +20,6 @@
 // [•] (x points) Distance rendered above draw dots « Not very accurate ... not sure why
 
 // Learnings / Open Loops
-// [ ] Draw dots « Apparently this is really hard in OS X... sad panda
-//
 
 import Cocoa
 
@@ -81,6 +77,143 @@ class MacViewController: NSViewController {
     @IBOutlet weak var settingMagicMode: NSSegmentedControl!
     @IBOutlet weak var labelDurationAttempt: NSTextField!
     @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
+    
+    // Result Number
+    func binaryFingerCalculation(requestAutomated:Bool = false) -> Int{
+        // Case: No Fingers Touching At All, Calculate
+        if MagicState == .calculating{
+            // Calculating Binary Finger
+            
+            var number:Int = 0
+            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
+            CurrentTouchState.enumerated().forEach { (arg) in
+                let (index,finger) = arg
+                if(finger.alive){
+                    let addition = pwrInt(2,index)
+                    number += addition
+                }
+            }
+            doMagicKeyboardBareMinimum(parameterNumber: number)
+            print("Current Binary Finger is \(number)")
+            MagicState = .dormant
+            return 0
+        }
+        
+        // Case: First Entry
+        if MagicState.contains(.dormant) && !requestAutomated {
+            print("YES WE ARE NEW")
+            MagicState = .waiting
+            // Checkback in pre-defined amount of miliseconds
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
+                _ = self.binaryFingerCalculation(requestAutomated: true)
+            }
+        }
+        
+        // Case: Waiting Over
+        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated{
+            MagicState = .calculating
+            // Calculating Binary Finger
+            
+            var number:Int = 0
+            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
+            CurrentTouchState.enumerated().forEach { (arg) in
+                let (index,finger) = arg
+                if(finger.alive){
+                    let addition = pwrInt(2,index)
+                    number += addition
+                }
+            }
+            doMagicKeyboardBareMinimum(parameterNumber: number)
+            print("Current Binary Finger is \(number)")
+            MagicState = .dormant
+        }
+        
+        // Case: Already waiting within predetermined buffer window user touched
+        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && !requestAutomated {
+            // Reset Timestamp as we now have a new finger state in the mix
+            BufferTimestamp = Date()
+        }
+        
+        return 0 // Static for now
+    }
+    
+    override func touchesBegan(with event: NSEvent) {
+        
+        // Reset Refactor V2
+        
+        // Set em all to dead
+        CurrentTouchState.enumerated().forEach({ (arg) in
+            let (index, _) = arg
+            CurrentTouchState[index].alive = false
+        })
+        
+        // Bring alive
+        print("Bring Alive These bad boys")
+        let touches = event.allTouches()
+        touches.forEach { (touch) in
+            
+            var closestTouch: Int = -1
+            var distanceBest:CGFloat = CGFloat(1000.00)
+            
+            // Who is the Closest to specify who just arrived
+            CurrentTouchState.enumerated().forEach({ (arg) in
+                let (index, tracking) = arg
+                let distance = trackingDistance(tracking:tracking, touch:touch)
+                if(distance < distanceBest){
+                    closestTouch = index
+                    distanceBest = distance
+                }
+            })
+            if closestTouch != -1 {
+                CurrentTouchState[closestTouch].alive = true
+            }
+            let phases = [
+                "1":"Began",
+                "2":"Moved",
+                "4":"Stationary",
+                "7":"Touching",
+                "8":"Ending",
+                "16":"Cancelled"
+            ]
+            let phase = phases["\(touch.phase.rawValue)"]
+            print(" 🖖+﹣ Finger\(closestTouch)  \(phase)")
+        }
+        
+        // Check, New Finger
+        let allTouchesCount = event.allTouches().count
+        if(CurrentTouchState.count < allTouchesCount){
+            // New Finger Detected, Add To Tracker
+            let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)
+            touches.forEach({ (firstTouch) in
+                CurrentTouchState.append(BinaryFinger(alive: true, touch: firstTouch, distance:0))
+            })
+        }
+        doMagic()
+    }
+    
+    override func touchesEnded(with event: NSEvent) {
+        // No fingers touching at all, let us calculate
+        let touches = event.allTouches()
+        let phases = [
+            "1":"Began",
+            "2":"Moved",
+            "4":"Stationary",
+            "7":"Touching",
+            "8":"Ending",
+            "16":"Cancelled"
+        ]
+        
+        for touch in touches {
+            let phase = phases["\(touch.phase.rawValue)"]
+            print(phase)
+        }
+        
+        // Touches Ending and only one, you know what that means... calculating time
+        if touches.count == 1 {
+            MagicState = .calculating
+            _ = self.binaryFingerCalculation(requestAutomated: false)
+        }
+    }
     
     func trackingDistance(tracking:BinaryFinger, touch:NSTouch) -> CGFloat{
         // Final Version
@@ -243,7 +376,8 @@ class MacViewController: NSViewController {
             
             // Haptic, Only On Change
             let str = self.binaryFingerCalculationString()
-            print("Haptic Attempt, \(str)")
+            //print("Haptic Attempt, \(str)")
+            self.labelExpectedFingerPositions.stringValue = "Haptic Attempt, \(str)" // Actual, not expeced... to be done
             self.doSequentialHaptics(input:str)
             
             /* Letter Game, Update User Interface */
@@ -303,49 +437,6 @@ class MacViewController: NSViewController {
         }
     }
     
-    // Result Number
-    func binaryFingerCalculation(requestAutomated:Bool = false) -> Int{
-        // Case: First Entry
-        if MagicState == .dormant{
-            MagicState = .waiting
-            // Checkback in 200 miliseconds
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
-                self.binaryFingerCalculation(requestAutomated: true)
-            }
-        }
-        
-        // Case: Waiting Over
-        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated{
-            MagicState = .calculating
-            // Calculating Binary Finger
-            
-            var number:Int = 0
-            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
-            CurrentTouchState.enumerated().forEach { (arg) in
-                let (index,finger) = arg
-                if(finger.alive){
-                    let addition = pwrInt(2,index)
-                    number += addition
-                }
-            }
-            doMagicKeyboardBareMinimum(parameterNumber: number)
-            print("Current Binary Finger is \(number)")
-            MagicState = .dormant
-        }
-        
-        // Case: Already waiting within predetermined buffer window
-        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && !requestAutomated {
-            // Reset Timestamp as we now have a new finger state in the mix
-            BufferTimestamp = Date()
-        }
-        
-        
-        
-        
-        
-        return 0 // Static for now
-    }
-    
     // Binary Representation String
     func binaryFingerCalculationString() -> String{
         // Calculating Binary Finger
@@ -381,111 +472,6 @@ class MacViewController: NSViewController {
     
     
     
-    override func touchesBegan(with event: NSEvent) {
-        
-        // Reset Refactor V2
-        
-        // Set em all to dead
-        CurrentTouchState.enumerated().forEach({ (arg) in
-            let (index, _) = arg
-            CurrentTouchState[index].alive = false
-        })
-        
-        // Bring alive
-        print("Bring Alive These bad boys")
-        let touches = event.allTouches()
-        touches.forEach { (touch) in
-            
-            var closestTouch: Int = -1
-            var distanceBest:CGFloat = CGFloat(1000.00)
-            
-            // Who is the Closest to specify who just arrived
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                let (index, tracking) = arg
-                let distance = trackingDistance(tracking:tracking, touch:touch)
-                if(distance < distanceBest){
-                    closestTouch = index
-                    distanceBest = distance
-                }
-            })
-            if closestTouch != -1 {
-                CurrentTouchState[closestTouch].alive = true
-            }
-            let phases = [
-                "1":"Began",
-                "2":"Moved",
-                "4":"Stationary",
-                "7":"Touching",
-                "8":"Ending",
-                "16":"Cancelled"
-            ]
-            let phase = phases["\(touch.phase.rawValue)"]
-            print(" 🖖+﹣ Finger\(closestTouch)  \(phase)")
-        }
-        
-        // Check, New Finger
-        let allTouchesCount = event.allTouches().count
-        if(CurrentTouchState.count < allTouchesCount){
-            // New Finger Detected, Add To Tracker
-            let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)
-            touches.forEach({ (firstTouch) in
-                CurrentTouchState.append(BinaryFinger(alive: true, touch: firstTouch, distance:0))
-            })
-        } else {
-            // Check, What Fingers Are Still There Who Came Back?
-            let touches = event.touches(matching: NSTouch.Phase.any, in: self.view)
-            touches.forEach { (touch) in
-                var closestTouch: Int = -1
-                var distanceBest:CGFloat = CGFloat(1000.00)
-                
-                // Who is the Closest to specify who just arrived
-                CurrentTouchState.enumerated().forEach({ (arg) in
-                    let (index, tracking) = arg
-                    let distance = trackingDistance(tracking:tracking, touch:touch)
-                    if(distance < distanceBest){
-                        closestTouch = index
-                        distanceBest = distance
-                    }
-                })
-                
-                // Update Who Arrived Back
-                if(closestTouch != -1){
-                    //CurrentTouchState[closestTouch].alive = true
-                    //CurrentTouchState[closestTouch].distance = (distanceBest)
-                    //print("🖖🏼＋ Finger \(closestTouch) touch down")
-                }
-            }
-        }
-        doMagic()
-    }
-    
-    override func touchesEnded(with event: NSEvent) {
-        let touches = event.touches(matching: NSTouch.Phase.any, in: self.view)
-        touches.forEach { (touch) in
-            
-            //print("End for finger unknwon which is in a state of \(touch.phase)")
-            
-            var closestTouch: Int = -1
-            var distanceBest:CGFloat = CGFloat(1000.00)
-            
-            // Who is the Closest to specify who just departed
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                let (index, tracking) = arg
-                let distance = trackingDistance(tracking:tracking, touch:touch)
-                if(distance < distanceBest){
-                    closestTouch = index
-                    distanceBest = distance
-                }
-            })
-            
-            // Update Who Arrived Back + Check To See If Resting Or Dead
-            if(closestTouch != -1){
-//                print("🖖🏼﹣ Finger \(closestTouch) touch up \(phase)")
-//                CurrentTouchState[closestTouch].alive = false
-//                CurrentTouchState[closestTouch].distance = (distanceBest)
-            }
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

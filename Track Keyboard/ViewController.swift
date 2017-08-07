@@ -45,7 +45,7 @@ var endTime = NSDate()
 
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.28))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.24))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
 

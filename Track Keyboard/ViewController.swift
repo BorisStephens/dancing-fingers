@@ -37,6 +37,7 @@ var MagicMode = "KeyboardBasic"
 var CurrentTouchState:Array<BinaryFinger> = []
 var MagicNumber = 0
 var doTrack = false
+var Waiting = true // Waiting for 5 fingers
 
 /* Timer Mode */
 let timerMode = true
@@ -415,12 +416,17 @@ class MacViewController: NSViewController {
         }
     }
     
+    
     func doMagic(){
         
         // Getting Started Bro
-        if(CurrentTouchState.count < 4){
-            self.testing.stringValue = "Please add a finger, need 4 we have \(CurrentTouchState.count)"
+        if(CurrentTouchState.count != 5){
+            self.testing.stringValue = "Please add a finger, need 5 we have \(CurrentTouchState.count)"
         } else {
+            if(Waiting){
+                self.testing.stringValue = ""
+                Waiting = false
+            }
             if(MagicMode == "Counting"){
                 self.doMagicNumbers()
             }

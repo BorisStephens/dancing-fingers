@@ -35,6 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         for (_, interface) in UILettersGame {
             interface.backgroundColor = NSColor.red
         }
+        // Waiting on 5 Fingers
+        Waiting = true
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {

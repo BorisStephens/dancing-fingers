@@ -46,7 +46,7 @@ var endTime = NSDate()
 
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.24))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.10))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
 
@@ -103,6 +103,9 @@ class MacViewController: NSViewController {
                 let (index, _) = arg
                 CurrentTouchState[index].alive = false
             })
+            
+            // Save Time
+            self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
             return 0
         }
         
@@ -137,6 +140,10 @@ class MacViewController: NSViewController {
                 let (index, _) = arg
                 CurrentTouchState[index].alive = false
             })
+            
+            // Save Time
+            
+            self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
         }
         
         // Case: Already waiting within predetermined buffer window user touched
@@ -149,8 +156,6 @@ class MacViewController: NSViewController {
     }
     
     override func touchesBegan(with event: NSEvent) {
-        
-        
         
         // Bring alive
         print("Bring Alive These bad boys")
@@ -180,7 +185,7 @@ class MacViewController: NSViewController {
                 "8":"Ending",
                 "16":"Cancelled"
             ]
-            let phase = phases["\(touch.phase.rawValue)"]
+            let phase = phases["\(touch.phase.rawValue)"]!
             print(" 🖖+﹣ Finger\(closestTouch)  \(phase)")
         }
         
@@ -210,7 +215,7 @@ class MacViewController: NSViewController {
         
         for touch in touches {
             let phase = phases["\(touch.phase.rawValue)"]
-            print(phase)
+            print(phase ?? "default touch phase apparently")
         }
         
         // Touches Ending and only one, you know what that means... calculating time
@@ -437,7 +442,7 @@ class MacViewController: NSViewController {
                 self.doMagicLetters()
             }
             if(MagicMode == "KeyboardBasic"){
-                self.binaryFingerCalculation()
+                _ = self.binaryFingerCalculation()
             }
         }
         
@@ -463,7 +468,6 @@ class MacViewController: NSViewController {
         return number
     }
     
-    
     override func touchesMoved(with event: NSEvent) {}
     
     func doTrackingAssit(){
@@ -481,14 +485,16 @@ class MacViewController: NSViewController {
     }
     
     
-    
-    
+    override func quickLook(with event: NSEvent) {
+        /* Yeah i dont want this to happen bro */
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.acceptsTouchEvents = true
+        saveTime(textToSave: "--- New Session Started --- \(Date().description)")
         // Do any additional setup after loading the view.
         self.view.wantsRestingTouches = true
-        
         /* Numbers Game, User Interface */
         for number in 1...15 {
             let text = NSText(frame: NSMakeRect(CGFloat(27*number),20,25,20))
@@ -519,6 +525,34 @@ class MacViewController: NSViewController {
             // Update the view, if already loaded.
         }
     }
+    
+    
+    func saveTime(textToSave:String){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 40) {
+            // create the destination url for the text file to be saved
+            let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+            let fileURL = documentDirectory.appendingPathComponent("file.txt")
+            
+            var text = textToSave
+            do {
+                // reading from disk
+                do {
+                    let mytext = try String(contentsOf: fileURL)
+                    text = "\(text)\n\(mytext)"
+                    //print(mytext)   // "some text\n"
+                } catch {
+                    print("error loading contents of:", fileURL, error)
+                }
+                
+                // writing to disk
+                try text.write(to: fileURL, atomically: false, encoding: .utf8)
+                
+                // saving was successful.
+            } catch {
+                print("error writing to url:", fileURL, error)
+            }
+        }
+    }
 }
 
 extension String {
@@ -538,6 +572,8 @@ extension CGPoint {
         return sqrt(pow((p.x - x), 2) + pow((p.y - y), 2))
     }
 }
+
+
 
 //print("Finger Check:")
 //touches.forEach { (touch) in
@@ -559,6 +595,8 @@ extension CGPoint {
 //func doMagicGesturePathWords(){ // Map sounds... wow... that'll be quite a thing...
 //
 //}
+
+
 
 extension NSTouch {
     /**

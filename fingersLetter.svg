@@ -2,9 +2,9 @@
 <!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 138.181 138.181" style="enable-background:new 0 0 138.181 138.181;" xml:space="preserve">
-<g>
+<g id='global'>
 	<g>
-		<path style="fill:#CCCCCC;" d="M59.255,137.743c0,0,3.502-3.064-2.626-8.316c0,0-16.052-10.449-25.719-22.115
+		<path id="hand" style="fill:#CCCCCC;   -moz-transition:color 2.2s ease-in;-o-transition:color 2.2s ease-in;-webkit-transition:color 2.2s ease-in;" d="M59.255,137.743c0,0,3.502-3.064-2.626-8.316c0,0-16.052-10.449-25.719-22.115
 			c-2.5-4-9.9-11.911-10.567-17.911c-0.667-6-6.531-18.709-6.531-18.709s-1.721-8.454,6.822-8.657
 			c8.078,2.896,16.652,23.187,16.652,23.187s6.212,4.62,7.4-0.8c0,0,1.889-7.254-0.654-19.498
 			c-2.735-13.176-6.625-23.703-9.377-41.389c-0.5-11.834,10.928-7.704,11.901-3.168c1.2,0.192,8.576,44.323,16.243,44.323
@@ -68,14 +68,30 @@
 	var finger4 = document.getElementById('finger4');
 	var finger5 = document.getElementById('finger5');
 	var text = document.getElementById('text-number');
-	var	Alphabet = "   abcdefghijklmnopqrstuvwxyz";
+	var hand = document.getElementById('hand');
+	var global = document.getElementById('global');
+	var Alphabet = "   abcdefghijklmnopqrstuvwxyz";
+
+        document.addEventListener("click", sendClickToParentDocument,false);
+
+    function sendClickToParentDocument(evt)
+    {
+        hand.style.fill = 'rgb(0, 124, 0)'
+        setTimeout(function(){
+            hand.style.fill = 'black';
+        },2000);
+    }
+
+
 	
 	HandFingerBinaryStates = JSON.parse("{\"0\":\"00000\",\"1\":\"10000\",\"2\":\"01000\",\"3\":\"11000\",\"4\":\"00100\",\"5\":\"10100\",\"6\":\"01100\",\"7\":\"11100\",\"8\":\"00010\",\"9\":\"10010\",\"10\":\"01010\",\"11\":\"11010\",\"12\":\"00110\",\"13\":\"10110\",\"14\":\"01110\",\"15\":\"11110\",\"16\":\"00001\",\"17\":\"10001\",\"18\":\"01001\",\"19\":\"11001\",\"20\":\"00101\",\"21\":\"10101\",\"22\":\"01101\",\"23\":\"11101\",\"24\":\"00011\",\"25\":\"10011\",\"26\":\"01011\",\"27\":\"11011\",\"28\":\"00111\",\"29\":\"10111\",\"30\":\"01111\",\"31\":\"11111\"}");
 	
 	a = HandFingerBinaryStates;
 	var parameters = document.defaultView.location.href.split("?")[1].split("&");
 	var number = parameters[0];
+	var color = '#000000';
 
+                hand.style.fill = color;
 		finger1.style.display = (!!parseInt(a[number][0])) ? '': 'none';
 		finger2.style.display = (!!parseInt(a[number][1])) ? '': 'none';
 		finger3.style.display = (!!parseInt(a[number][2])) ? '': 'none';

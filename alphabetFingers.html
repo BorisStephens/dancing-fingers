@@ -1,5 +1,4 @@
 <html>
-
 <style>
 body{
 	background-color:#545454;
@@ -9,17 +8,35 @@ body{
 	transform: scaleX(-1);
 }
 </style>
-
 <div id='number'>
-  <object type="image/svg+xml" data="fingersLetter.svg?1" style="width:200px;"></object>
+  <object type="image/svg+xml" data="fingersLetter.svg?1" style="width:100px;"></object>
 </div>
-
 </html>
 
 <script>
+var BinaryAlphabet = "   abcdefghijklmnopqrstuvwxyz";
 for(var i=2;i<32;i++){
-	Image =  document.getElementsByTagName('object')[0].cloneNode();
-	Image.data = "fingersLetter.svg?" + i;
-	document.getElementById('number').appendChild(Image);
+    Image =  document.getElementsByTagName('object')[0].cloneNode();
+    Image.data = "fingersLetter.svg?" + i;
+    Image.id = 'letter' + BinaryAlphabet[i];
+    document.getElementById('number').appendChild(Image);
 }
+</script>
+
+
+<script>
+window.addEventListener("load", function load(event){
+    highlightLetter = function(letter,lag){
+       console.log(letter)
+       derp = document.getElementById('letter'+letter).contentDocument.getElementById('hand');
+       derp.style.fill = 'green'
+    }
+
+   var TypeLetters = "hello my name is luke"
+    for(character in TypeLetters){
+        var Letter = TypeLetters[character];
+	setTimeout(highlightLetter.bind(Letter,Letter), 1500 * character);
+    }
+
+});
 </script>

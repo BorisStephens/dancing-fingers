@@ -157,10 +157,7 @@ class MacViewController: NSViewController {
     
     override func touchesBegan(with event: NSEvent) {
         
-        // Reset Timer
-        if(event.allTouches().count == 5){
-            startTime = NSDate()
-        }
+       
         
         // Bring alive
         print("Bring Alive These bad boys")
@@ -196,6 +193,24 @@ class MacViewController: NSViewController {
         
         // Check, New Finger
         let allTouchesCount = event.allTouches().count
+        // Instant Five Finger Detection
+        if(allTouchesCount == 5 && CurrentTouchState.count < 5){
+            //startTime = NSDate()
+            CurrentTouchState.removeAll()
+            
+            // Load All
+            event.allTouches().forEach({ (firstTouch) in
+                CurrentTouchState.append(BinaryFinger(alive: true, touch: firstTouch, distance:0))
+                
+            })
+            
+            // Sort Horizontally
+            CurrentTouchState = CurrentTouchState.sorted {
+                $0.touch.normalizedPosition.x < $1.touch.normalizedPosition.x
+            }
+        }
+        
+        // More than five or doing it progressivly
         if(CurrentTouchState.count < allTouchesCount){
             // New Finger Detected, Add To Tracker
             let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)

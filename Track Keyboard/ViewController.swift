@@ -106,7 +106,7 @@ class MacViewController: NSViewController {
             
             // Save Time
             self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
-            return 0
+            return number
         }
         
         // Case: First Entry
@@ -156,6 +156,11 @@ class MacViewController: NSViewController {
     }
     
     override func touchesBegan(with event: NSEvent) {
+        
+        // Reset Timer
+        if(event.allTouches().count == 5){
+            startTime = NSDate()
+        }
         
         // Bring alive
         print("Bring Alive These bad boys")
@@ -358,6 +363,11 @@ class MacViewController: NSViewController {
         
         if(number == 1){ // Space
             self.testing.stringValue = "\(self.testing.stringValue) "
+            if(SynthesizeVoice){
+                let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                // Verna talks once
+                mySynth.startSpeaking("space")
+            }
             return
         }
         if(number == 0){ // Backspace
@@ -366,7 +376,12 @@ class MacViewController: NSViewController {
             // String has something to remove?
             if(outcome.count > 0){
                 outcome = outcome.substring(to: outcome.index(before: outcome.endIndex))
-                self.testing.stringValue = "\(outcome)"
+                self.testing.stringValue = "\(outcome)"            /* Speak */
+                if(SynthesizeVoice){
+                    let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                    // Verna talks once
+                    mySynth.startSpeaking("delte")
+                }
                 return
             }
         }
@@ -386,7 +401,7 @@ class MacViewController: NSViewController {
             
             // Haptic, Only On Change
             let str = self.binaryFingerCalculationString()
-            //print("Haptic Attempt, \(str)")
+            print("Haptic Attempt, \(str)")
             self.labelExpectedFingerPositions.stringValue = "Haptic Attempt, \(str)" // Actual, not expeced... to be done
             self.doSequentialHaptics(input:str)
             
@@ -518,6 +533,11 @@ class MacViewController: NSViewController {
             UILettersGame[letter] = text
         }
         
+        /* What is your name */
+        let defaults = UserDefaults.standard
+//        defaults.set("Josh", forKey: "name")
+//        print(defaults.string(forKey: "name") ?? "No saved name")
+
     }
     
     override var representedObject: Any? {

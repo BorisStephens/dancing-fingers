@@ -22,6 +22,7 @@
 // Learnings / Open Loops
 
 import Cocoa
+let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
 struct BinaryFinger {
     
@@ -46,9 +47,10 @@ var endTime = NSDate()
 
 /* Keyboard Pattern Misfire Protection */
 var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.10))!
+var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.18))!
 var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
+var KeyboardFiresWithinTimer = false
 
 var UINumbersGame: Dictionary<Int, NSText> = [:]
 var UILettersGame: Dictionary<Character, NSText> = [:]
@@ -114,12 +116,15 @@ class MacViewController: NSViewController {
             MagicState = .waiting
             // Checkback in pre-defined amount of miliseconds
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
-                _ = self.binaryFingerCalculation(requestAutomated: true)
+                if KeyboardFiresWithinTimer {
+                    _ = self.binaryFingerCalculation(requestAutomated: true)
+                }
             }
+            return 0
         }
         
         // Case: Waiting Over
-        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated{
+        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated && KeyboardFiresWithinTimer{
             MagicState = .calculating
             // Calculating Binary Finger
             var number:Int = 0
@@ -238,10 +243,36 @@ class MacViewController: NSViewController {
             print(phase ?? "default touch phase apparently")
         }
         
-        // Touches Ending and only one, you know what that means... calculating time
-        if touches.count == 1 {
+        // Touches All Ending Then We Should probably calcualte
+        var touchesEndingAll = true
+        for touch in touches {
+            if touch.phase.rawValue != 8 {
+                touchesEndingAll = false
+            }
+        }
+        if touchesEndingAll {
             MagicState = .calculating
             _ = self.binaryFingerCalculation(requestAutomated: false)
+        }
+        
+        // Touches Ending and only one, you know what that means... calculating time
+        if touches.count == 1 && CurrentTouchState.count > 4 {
+            MagicState = .calculating
+            _ = self.binaryFingerCalculation(requestAutomated: false)
+        }
+        
+        // Touches Ending and in the bottom left corner of Magic Trackpad
+        if touches.count == 1 {
+            
+            if touches.first!.pos(self.view).x < 40 {
+                self.resetTimer()
+                self.testing.stringValue = ""
+                if(SynthesizeVoice){
+                    let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                    // Verna talks once
+                    mySynth.startSpeaking("reset")
+                }
+            }
         }
     }
     
@@ -380,6 +411,7 @@ class MacViewController: NSViewController {
             self.testing.stringValue = "\(self.testing.stringValue) "
             if(SynthesizeVoice){
                 let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                mySynth.volume = 0.3
                 // Verna talks once
                 mySynth.startSpeaking("space")
             }
@@ -394,8 +426,9 @@ class MacViewController: NSViewController {
                 self.testing.stringValue = "\(outcome)"            /* Speak */
                 if(SynthesizeVoice){
                     let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                    mySynth.volume = 0.3
                     // Verna talks once
-                    mySynth.startSpeaking("delte")
+                    mySynth.startSpeaking("delete")
                 }
                 return
             }
@@ -561,11 +594,16 @@ class MacViewController: NSViewController {
         }
     }
     
+     func resetTimer() {
+        
+        // Reset Buffer
+        self.saveTime(textToSave: "--- New Session Started --- \(Date().description)")
+        startTime = NSDate()
+    }
     
     func saveTime(textToSave:String){
         DispatchQueue.main.asyncAfter(deadline: .now() + 40) {
             // create the destination url for the text file to be saved
-            let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
             let fileURL = documentDirectory.appendingPathComponent("file.txt")
             
             var text = textToSave
@@ -581,7 +619,6 @@ class MacViewController: NSViewController {
                 
                 // writing to disk
                 try text.write(to: fileURL, atomically: false, encoding: .utf8)
-                
                 // saving was successful.
             } catch {
                 print("error writing to url:", fileURL, error)

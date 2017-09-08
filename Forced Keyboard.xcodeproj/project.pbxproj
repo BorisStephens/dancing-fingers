@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
+		673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
 		67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549041F03DFBB001D25B7 /* AppDelegate.swift */; };
 		67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* ViewController.swift */; };
 		67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
@@ -19,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		673B6F911F62CFFB009EFF82 /* DancingFingers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingFingers.swift; sourceTree = "<group>"; };
 		67E549021F03DFBB001D25B7 /* Track Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Track Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E549041F03DFBB001D25B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67E549061F03DFBB001D25B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -53,6 +56,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		673B6F901F62CFCD009EFF82 /* DancingFingersCore */ = {
+			isa = PBXGroup;
+			children = (
+				673B6F911F62CFFB009EFF82 /* DancingFingers.swift */,
+			);
+			path = DancingFingersCore;
+			sourceTree = "<group>";
+		};
 		67E549031F03DFBB001D25B7 /* Track Keyboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -69,6 +80,7 @@
 		67FD9D6B1EFFB0F200DF4ABB = {
 			isa = PBXGroup;
 			children = (
+				673B6F901F62CFCD009EFF82 /* DancingFingersCore */,
 				67FD9D761EFFB0F200DF4ABB /* Forced Keyboard */,
 				67E549031F03DFBB001D25B7 /* Track Keyboard */,
 				67FD9D751EFFB0F200DF4ABB /* Products */,
@@ -198,6 +210,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
 				67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */,
 				67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */,
 			);
@@ -207,6 +220,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
 				67FD9D7A1EFFB0F200DF4ABB /* MainController.swift in Sources */,
 				67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */,
 			);

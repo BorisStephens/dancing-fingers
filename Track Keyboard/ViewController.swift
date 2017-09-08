@@ -24,145 +24,16 @@
 import Cocoa
 let documentDirectory = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
 
-struct BinaryFinger {
-    
-    var alive: Bool = false
-    let touch:NSTouch
-    var distance:CGFloat = 0.00
-    // println() should print just the unit name:
-    var description: String { return touch.identity as! String }
-}
-
-/* Core Varaibles */
-var MagicMode = "KeyboardBasic"
-var CurrentTouchState:Array<BinaryFinger> = []
-var MagicNumber = 0
-var doTrack = false
-var Waiting = true // Waiting for 5 fingers
-
-/* Timer Mode */
-let timerMode = true
-var startTime = NSDate()
-var endTime = NSDate()
-
-/* Keyboard Pattern Misfire Protection */
-var BufferTimestamp:Date? = Date()
-var BufferWaitTime:TimeInterval = TimeInterval(exactly: Float(0.18))!
-var SynthesizeVoice:Bool = true
-var MagicState: DancingKeyboardStates = .dormant
-var KeyboardFiresWithinTimer = false
-
-var UINumbersGame: Dictionary<Int, NSText> = [:]
-var UILettersGame: Dictionary<Character, NSText> = [:]
-
-struct DancingKeyboardStates: OptionSet {
-    let rawValue: Int
-    
-    static let waiting      = DancingKeyboardStates(rawValue: 1 << 0)
-    static let calculating  = DancingKeyboardStates(rawValue: 1 << 1)
-    static let dormant      = DancingKeyboardStates(rawValue: 1 << 2)
-    
-    static let all: DancingKeyboardStates = [.waiting, .calculating, .dormant]
-}
-var MagicTrackingState: TrackingStates = .distanceXY//.vertical//.distanceXY
-struct TrackingStates: OptionSet {
-    let rawValue: Int
-    
-    static let normalized = TrackingStates(rawValue: 1 << 0)
-    static let horizontal = TrackingStates(rawValue: 1 << 1)
-    static let vertical   = TrackingStates(rawValue: 1 << 2)
-    static let distanceXY = TrackingStates(rawValue: 1 << 3)
-}
-
 class MacViewController: NSViewController {
     
     @IBOutlet weak var testing: NSTextField!
     @IBOutlet weak var settingMagicMode: NSSegmentedControl!
     @IBOutlet weak var labelDurationAttempt: NSTextField!
     @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
+    let Dancing = DancingFingers()
     
-    // Result Number
-    func binaryFingerCalculation(requestAutomated:Bool = false) -> Int{
-        // Case: No Fingers Touching At All, Calculate
-        if MagicState == .calculating{
-            // Calculating Binary Finger
-            
-            var number:Int = 0
-            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
-            CurrentTouchState.enumerated().forEach { (arg) in
-                let (index,finger) = arg
-                if(finger.alive){
-                    let addition = pwrInt(2,index)
-                    number += addition
-                }
-            }
-            doMagicKeyboardBareMinimum(parameterNumber: number)
-            print("Current Binary Finger is \(number)")
-            
-            // Reset Refactor V2 // Set em all to dead
-            MagicState = .dormant
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                let (index, _) = arg
-                CurrentTouchState[index].alive = false
-            })
-            
-            // Save Time
-            self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
-            return number
-        }
-        
-        // Case: First Entry
-        if MagicState.contains(.dormant) && !requestAutomated {
-            MagicState = .waiting
-            // Checkback in pre-defined amount of miliseconds
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + BufferWaitTime){
-                if KeyboardFiresWithinTimer {
-                    _ = self.binaryFingerCalculation(requestAutomated: true)
-                }
-            }
-            return 0
-        }
-        
-        // Case: Waiting Over
-        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && requestAutomated && KeyboardFiresWithinTimer{
-            MagicState = .calculating
-            // Calculating Binary Finger
-            var number:Int = 0
-            let pwrInt:(Int,Int)->Int = { a,b in return Int(pow(Double(a),Double(b))) }
-            CurrentTouchState.enumerated().forEach { (arg) in
-                let (index,finger) = arg
-                if(finger.alive){
-                    let addition = pwrInt(2,index)
-                    number += addition
-                }
-            }
-            doMagicKeyboardBareMinimum(parameterNumber: number)
-            print("Current Binary Finger is \(number)")
-            
-            // Reset Refactor V2 // Set em all to dead
-            MagicState = .dormant
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                let (index, _) = arg
-                CurrentTouchState[index].alive = false
-            })
-            
-            // Save Time
-            
-            self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
-        }
-        
-        // Case: Already waiting within predetermined buffer window user touched
-        if MagicState == .waiting && BufferTimestamp! < Date() + BufferWaitTime && !requestAutomated {
-            // Reset Timestamp as we now have a new finger state in the mix
-            BufferTimestamp = Date()
-        }
-        
-        return 0 // Static for now
-    }
     
     override func touchesBegan(with event: NSEvent) {
-        
-       
         
         // Bring alive
         print("Bring Alive These bad boys")
@@ -205,8 +76,7 @@ class MacViewController: NSViewController {
             
             // Load All
             event.allTouches().forEach({ (firstTouch) in
-                CurrentTouchState.append(BinaryFinger(alive: true, touch: firstTouch, distance:0))
-                
+                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, touch: firstTouch))
             })
             
             // Sort Horizontally
@@ -220,7 +90,7 @@ class MacViewController: NSViewController {
             // New Finger Detected, Add To Tracker
             let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)
             touches.forEach({ (firstTouch) in
-                CurrentTouchState.append(BinaryFinger(alive: true, touch: firstTouch, distance:0))
+                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, touch: firstTouch))
             })
         }
         doMagic()
@@ -252,13 +122,15 @@ class MacViewController: NSViewController {
         }
         if touchesEndingAll {
             MagicState = .calculating
-            _ = self.binaryFingerCalculation(requestAutomated: false)
+            let number = self.Dancing.binaryFingerCalculation(requestAutomated: false)
+            doMagicKeyboardBareMinimum(parameterNumber: number)
         }
         
         // Touches Ending and only one, you know what that means... calculating time
         if touches.count == 1 && CurrentTouchState.count > 4 {
             MagicState = .calculating
-            _ = self.binaryFingerCalculation(requestAutomated: false)
+            let number = self.Dancing.binaryFingerCalculation(requestAutomated: false)
+            doMagicKeyboardBareMinimum(parameterNumber: number)
         }
         
         // Touches Ending and in the bottom left corner of Magic Trackpad
@@ -318,10 +190,9 @@ class MacViewController: NSViewController {
         }
     }
     
-    
     func doMagicNumbers(){
         // User Interface Update
-        let number = self.binaryFingerCalculation()
+        let number = self.Dancing.binaryFingerCalculation()
         doTimer(number:number)
         self.testing.stringValue = String(number)
         
@@ -353,6 +224,7 @@ class MacViewController: NSViewController {
                 self.labelDurationAttempt.stringValue = String(startTime.timeIntervalSinceNow * -1)
                 return
             }
+            
             /* A was just pressed probably */
             if(letterIsDone(letter: "A") && !letterIsDone(letter: "B") && MagicMode == "KeyboardBasic" && number == 3){
                 startTime = NSDate()
@@ -386,7 +258,7 @@ class MacViewController: NSViewController {
     func doMagicWords(){
         
         // Calculating Binary Finger
-        let number = self.binaryFingerCalculation()
+        let number = self.Dancing.binaryFingerCalculation()
         
         let anArray = ["Hello","My","Name","Is","Luke James Stephens","And","This","Me","Doing","A","Test","Of","How","Fast","I","Can","Type","On","Keyboard"]
         
@@ -397,7 +269,8 @@ class MacViewController: NSViewController {
         }
     }
     
-    func doMagicKeyboardBareMinimum(parameterNumber:Int){ // Really need a bigger trackpad
+    func doMagicKeyboardBareMinimum(parameterNumber:Int){ // Really need a bigger trackpad, not true
+        print(parameterNumber)
         //     A...Z, 26 (+2)
         // Backspace, 1
         // Spacebar , 2
@@ -469,7 +342,7 @@ class MacViewController: NSViewController {
     
     func doMagicLetters(){
         // Calculating Binary Finger
-        let number = self.binaryFingerCalculation() - 1
+        let number = self.Dancing.binaryFingerCalculation() - 1
         let str = "abcdefghijklmnopqrstuvwxyz"
         
         let alphabets = Array(str)
@@ -505,7 +378,8 @@ class MacViewController: NSViewController {
                 self.doMagicLetters()
             }
             if(MagicMode == "KeyboardBasic"){
-                _ = self.binaryFingerCalculation()
+                let number = self.Dancing.binaryFingerCalculation()
+                doMagicKeyboardBareMinimum(parameterNumber: number)
             }
         }
         

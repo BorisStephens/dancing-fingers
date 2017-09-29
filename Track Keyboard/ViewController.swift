@@ -280,6 +280,20 @@ class MacViewController: NSViewController {
         doTimer(number:number)
         MagicNumber = number
         
+        // Reading
+        if(parameterNumber == 30){ // Backspace
+            var outcome = self.testing.stringValue
+            print("SPEAKING")
+            if(SynthesizeVoice){
+                let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+                mySynth.volume = 1.0
+                // Verna talks once
+                mySynth.startSpeaking(outcome)
+            }
+            return
+        }
+        
+        // Space
         if(number == 1){ // Space
             self.testing.stringValue = "\(self.testing.stringValue) "
             if(SynthesizeVoice){

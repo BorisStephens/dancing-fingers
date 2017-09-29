@@ -31,20 +31,20 @@ class DancingFingers{
     // Result Letter
     func letter() {
         // Letters
-        let str = "abcdefghijklmnopqrstuvwxyz"
-        let alphabets = Array(str)
-        if(number <= (alphabets.count + 1) && number >= 2){
-         
-            // User Interface Append Letter
-            let alphabetNumber = number - 2
-            let letter = alphabets[alphabetNumber]
-            if(self.testing.stringValue == "Please add a finger, need 4 we have 3"){
-                self.testing.stringValue = ""
-            }
-            self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
-            
-            return letter
-        }
+//        let str = "abcdefghijklmnopqrstuvwxyz"
+//        let alphabets = Array(str)
+//        if(number <= (alphabets.count + 1) && number >= 2){
+//
+//            // User Interface Append Letter
+//            let alphabetNumber = number - 2
+//            let letter = alphabets[alphabetNumber]
+//            if(self.testing.stringValue == "Please add a finger, need 4 we have 3"){
+//                self.testing.stringValue = ""
+//            }
+//            self.testing.stringValue = "\(self.testing.stringValue)\(alphabets[alphabetNumber])"
+//
+//            return letter
+//        }
     }
     
     // Result Number

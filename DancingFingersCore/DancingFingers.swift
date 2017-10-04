@@ -6,10 +6,22 @@
 //  Copyright © 2017 Luke Stephens. All rights reserved.
 //
 
-import Foundation
-import Cocoa
 
+#if os(iOS) || os(watchOS) || os(tvOS) // 📱⌚️📺
+    import Foundation
+    import UIKit
+#elseif os(OSX) // 🖥
+    import Foundation
+    import Cocoa
+#endif
 
+#if os(iOS) || os(watchOS) || os(tvOS) // 📱⌚️📺
+var UINumbersGame: Dictionary<Int, UILabel> = [:]
+var UILettersGame: Dictionary<Character, UILabel> = [:]
+#elseif os(OSX) // 🖥
+var UINumbersGame: Dictionary<Int, NSText> = [:]
+var UILettersGame: Dictionary<Character, NSText> = [:]
+#endif
 
 /* Binary Finger, Used to track the finger toches */
 struct BinaryFinger {
@@ -19,7 +31,7 @@ struct BinaryFinger {
     
     #if os(iOS) || os(watchOS) || os(tvOS)
     let touch:UITouch
-    var description: String { return touch.identity as! String }
+    var description: String { return touch as! String }
     #elseif os(OSX)
     let touch:NSTouch
     var description: String { return touch.identity as! String }
@@ -135,11 +147,19 @@ class DancingFingers{
         startTime = NSDate()
         // Numbers Game
         for (_, numberGame) in UINumbersGame {
-            numberGame.backgroundColor = NSColor.red
+            #if os(iOS) || os(watchOS) || os(tvOS) // 📱⌚️📺
+                numberGame.backgroundColor = UIColor.red
+            #elseif os(OSX) // 🖥
+                numberGame.backgroundColor = NSColor.red
+            #endif
         }
         // Letters Game
         for (_, interface) in UILettersGame {
-            interface.backgroundColor = NSColor.red
+            #if os(iOS) || os(watchOS) || os(tvOS) // 📱⌚️📺
+                interface.backgroundColor = UIColor.red
+            #elseif os(OSX) // 🖥
+                interface.backgroundColor = NSColor.red
+            #endif
         }
         // Waiting on 5 Fingers
         Waiting = true
@@ -191,8 +211,7 @@ var SynthesizeVoice:Bool = true
 var MagicState: DancingKeyboardStates = .dormant
 var KeyboardFiresWithinTimer = false
 
-var UINumbersGame: Dictionary<Int, NSText> = [:]
-var UILettersGame: Dictionary<Character, NSText> = [:]
+
 
 struct DancingKeyboardStates: OptionSet {
     let rawValue: Int

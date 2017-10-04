@@ -29,7 +29,7 @@
 		67E5490B1F03DFBB001D25B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		67E5490D1F03DFBB001D25B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Track_Keyboard.entitlements; sourceTree = "<group>"; };
-		67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forced Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		67FD9D741EFFB0F200DF4ABB /* Dancing Fingers Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dancing Fingers Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67FD9D791EFFB0F200DF4ABB /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		67FD9D7C1EFFB0F200DF4ABB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -64,7 +64,7 @@
 			path = DancingFingersCore;
 			sourceTree = "<group>";
 		};
-		67E549031F03DFBB001D25B7 /* Track Keyboard */ = {
+		67E549031F03DFBB001D25B7 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				67E549041F03DFBB001D25B7 /* AppDelegate.swift */,
@@ -74,15 +74,15 @@
 				67E5490D1F03DFBB001D25B7 /* Info.plist */,
 				67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */,
 			);
-			path = "Track Keyboard";
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		67FD9D6B1EFFB0F200DF4ABB = {
 			isa = PBXGroup;
 			children = (
 				673B6F901F62CFCD009EFF82 /* DancingFingersCore */,
-				67FD9D761EFFB0F200DF4ABB /* Forced Keyboard */,
-				67E549031F03DFBB001D25B7 /* Track Keyboard */,
+				67FD9D761EFFB0F200DF4ABB /* OS X */,
+				67E549031F03DFBB001D25B7 /* iOS */,
 				67FD9D751EFFB0F200DF4ABB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,13 +90,13 @@
 		67FD9D751EFFB0F200DF4ABB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */,
+				67FD9D741EFFB0F200DF4ABB /* Dancing Fingers Keyboard.app */,
 				67E549021F03DFBB001D25B7 /* Track Keyboard.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		67FD9D761EFFB0F200DF4ABB /* Forced Keyboard */ = {
+		67FD9D761EFFB0F200DF4ABB /* OS X */ = {
 			isa = PBXGroup;
 			children = (
 				67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */,
@@ -106,7 +106,7 @@
 				67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */,
 				67FD9D831EFFB0F200DF4ABB /* Info.plist */,
 			);
-			path = "Forced Keyboard";
+			path = "OS X";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -129,9 +129,9 @@
 			productReference = 67E549021F03DFBB001D25B7 /* Track Keyboard.app */;
 			productType = "com.apple.product-type.application";
 		};
-		67FD9D731EFFB0F200DF4ABB /* Forced Keyboard */ = {
+		67FD9D731EFFB0F200DF4ABB /* Dancing Fingers Keyboard */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 67FD9D861EFFB0F200DF4ABB /* Build configuration list for PBXNativeTarget "Forced Keyboard" */;
+			buildConfigurationList = 67FD9D861EFFB0F200DF4ABB /* Build configuration list for PBXNativeTarget "Dancing Fingers Keyboard" */;
 			buildPhases = (
 				67FD9D701EFFB0F200DF4ABB /* Sources */,
 				67FD9D711EFFB0F200DF4ABB /* Frameworks */,
@@ -141,9 +141,9 @@
 			);
 			dependencies = (
 			);
-			name = "Forced Keyboard";
+			name = "Dancing Fingers Keyboard";
 			productName = "Forced Keyboard";
-			productReference = 67FD9D741EFFB0F200DF4ABB /* Forced Keyboard.app */;
+			productReference = 67FD9D741EFFB0F200DF4ABB /* Dancing Fingers Keyboard.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -164,7 +164,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Forced Keyboard" */;
+			buildConfigurationList = 67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Dancing Fingers Keyboard" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -177,7 +177,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				67FD9D731EFFB0F200DF4ABB /* Forced Keyboard */,
+				67FD9D731EFFB0F200DF4ABB /* Dancing Fingers Keyboard */,
 				67E549011F03DFBB001D25B7 /* Track Keyboard */,
 			);
 		};
@@ -435,7 +435,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Forced Keyboard" */ = {
+		67FD9D6F1EFFB0F200DF4ABB /* Build configuration list for PBXProject "Dancing Fingers Keyboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				67FD9D841EFFB0F200DF4ABB /* Debug */,
@@ -444,7 +444,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		67FD9D861EFFB0F200DF4ABB /* Build configuration list for PBXNativeTarget "Forced Keyboard" */ = {
+		67FD9D861EFFB0F200DF4ABB /* Build configuration list for PBXNativeTarget "Dancing Fingers Keyboard" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				67FD9D871EFFB0F200DF4ABB /* Debug */,

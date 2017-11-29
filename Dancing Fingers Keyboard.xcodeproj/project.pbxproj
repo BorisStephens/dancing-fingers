@@ -260,11 +260,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Track Keyboard/Track_Keyboard.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "OS X/Track_Keyboard.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Q6477K9VD4;
-				INFOPLIST_FILE = "Track Keyboard/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
@@ -278,11 +278,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "Track Keyboard/Track_Keyboard.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "OS X/Track_Keyboard.entitlements";
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = Q6477K9VD4;
-				INFOPLIST_FILE = "Track Keyboard/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/iOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.12.2;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Track-Keyboard";
@@ -400,7 +400,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = Q6477K9VD4;
-				INFOPLIST_FILE = "Forced Keyboard/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/OS X/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Forced-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -414,7 +414,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEVELOPMENT_TEAM = Q6477K9VD4;
-				INFOPLIST_FILE = "Forced Keyboard/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/OS X/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.lukestephens.Forced-Keyboard";
 				PRODUCT_NAME = "$(TARGET_NAME)";

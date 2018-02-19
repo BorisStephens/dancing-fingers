@@ -10,11 +10,11 @@
 		673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
 		673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
 		67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549041F03DFBB001D25B7 /* AppDelegate.swift */; };
-		67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* ViewController.swift */; };
+		67E549071F03DFBB001D25B7 /* 🖥Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* 🖥Controller.swift */; };
 		67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
 		67E5490C1F03DFBB001D25B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67E5490A1F03DFBB001D25B7 /* Main.storyboard */; };
 		67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */; };
-		67FD9D7A1EFFB0F200DF4ABB /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D791EFFB0F200DF4ABB /* MainController.swift */; };
+		67FD9D7A1EFFB0F200DF4ABB /* 📱Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D791EFFB0F200DF4ABB /* 📱Controller.swift */; };
 		67FD9D7D1EFFB0F200DF4ABB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */; };
 		67FD9D7F1EFFB0F200DF4ABB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */; };
 		67FD9D821EFFB0F200DF4ABB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */; };
@@ -24,14 +24,14 @@
 		673B6F911F62CFFB009EFF82 /* DancingFingers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingFingers.swift; sourceTree = "<group>"; };
 		67E549021F03DFBB001D25B7 /* Track Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Track Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E549041F03DFBB001D25B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		67E549061F03DFBB001D25B7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		67E549061F03DFBB001D25B7 /* 🖥Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🖥Controller.swift"; sourceTree = "<group>"; };
 		67E549081F03DFBB001D25B7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67E5490B1F03DFBB001D25B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		67E5490D1F03DFBB001D25B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Track_Keyboard.entitlements; sourceTree = "<group>"; };
 		67FD9D741EFFB0F200DF4ABB /* Dancing Fingers Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Dancing Fingers Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		67FD9D791EFFB0F200DF4ABB /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		67FD9D791EFFB0F200DF4ABB /* 📱Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "📱Controller.swift"; sourceTree = "<group>"; };
 		67FD9D7C1EFFB0F200DF4ABB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		67FD9D811EFFB0F200DF4ABB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -68,7 +68,7 @@
 			isa = PBXGroup;
 			children = (
 				67E549041F03DFBB001D25B7 /* AppDelegate.swift */,
-				67E549061F03DFBB001D25B7 /* ViewController.swift */,
+				67E549061F03DFBB001D25B7 /* 🖥Controller.swift */,
 				67E549081F03DFBB001D25B7 /* Assets.xcassets */,
 				67E5490A1F03DFBB001D25B7 /* Main.storyboard */,
 				67E5490D1F03DFBB001D25B7 /* Info.plist */,
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */,
-				67FD9D791EFFB0F200DF4ABB /* MainController.swift */,
+				67FD9D791EFFB0F200DF4ABB /* 📱Controller.swift */,
 				67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */,
 				67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */,
 				67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */,
@@ -211,7 +211,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
-				67E549071F03DFBB001D25B7 /* ViewController.swift in Sources */,
+				67E549071F03DFBB001D25B7 /* 🖥Controller.swift in Sources */,
 				67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,7 +221,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
-				67FD9D7A1EFFB0F200DF4ABB /* MainController.swift in Sources */,
+				67FD9D7A1EFFB0F200DF4ABB /* 📱Controller.swift in Sources */,
 				67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

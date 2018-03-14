@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
 		673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673B6F911F62CFFB009EFF82 /* DancingFingers.swift */; };
+		67437A10203A55CA0035E7C9 /* ForceDacningFingersGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67437A0F203A55CA0035E7C9 /* ForceDacningFingersGesture.swift */; };
+		67437A12203A56100035E7C9 /* 🖥Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* 🖥Controller.swift */; };
+		676B4DB12040CE3900F3C220 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
 		67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549041F03DFBB001D25B7 /* AppDelegate.swift */; };
-		67E549071F03DFBB001D25B7 /* 🖥Controller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E549061F03DFBB001D25B7 /* 🖥Controller.swift */; };
 		67E549091F03DFBB001D25B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67E549081F03DFBB001D25B7 /* Assets.xcassets */; };
 		67E5490C1F03DFBB001D25B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67E5490A1F03DFBB001D25B7 /* Main.storyboard */; };
 		67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */; };
@@ -22,6 +24,7 @@
 
 /* Begin PBXFileReference section */
 		673B6F911F62CFFB009EFF82 /* DancingFingers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DancingFingers.swift; sourceTree = "<group>"; };
+		67437A0F203A55CA0035E7C9 /* ForceDacningFingersGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForceDacningFingersGesture.swift; sourceTree = "<group>"; };
 		67E549021F03DFBB001D25B7 /* Track Keyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Track Keyboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		67E549041F03DFBB001D25B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		67E549061F03DFBB001D25B7 /* 🖥Controller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "🖥Controller.swift"; sourceTree = "<group>"; };
@@ -64,15 +67,23 @@
 			path = DancingFingersCore;
 			sourceTree = "<group>";
 		};
+		676B4DAA2040CD5400F3C220 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		67E549031F03DFBB001D25B7 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				67E549041F03DFBB001D25B7 /* AppDelegate.swift */,
-				67E549061F03DFBB001D25B7 /* 🖥Controller.swift */,
+				67FD9D791EFFB0F200DF4ABB /* 📱Controller.swift */,
 				67E549081F03DFBB001D25B7 /* Assets.xcassets */,
 				67E5490A1F03DFBB001D25B7 /* Main.storyboard */,
 				67E5490D1F03DFBB001D25B7 /* Info.plist */,
 				67E5490E1F03DFBB001D25B7 /* Track_Keyboard.entitlements */,
+				67437A0F203A55CA0035E7C9 /* ForceDacningFingersGesture.swift */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -80,6 +91,7 @@
 		67FD9D6B1EFFB0F200DF4ABB = {
 			isa = PBXGroup;
 			children = (
+				676B4DAA2040CD5400F3C220 /* Images */,
 				673B6F901F62CFCD009EFF82 /* DancingFingersCore */,
 				67FD9D761EFFB0F200DF4ABB /* OS X */,
 				67E549031F03DFBB001D25B7 /* iOS */,
@@ -100,7 +112,7 @@
 			isa = PBXGroup;
 			children = (
 				67FD9D771EFFB0F200DF4ABB /* AppDelegate.swift */,
-				67FD9D791EFFB0F200DF4ABB /* 📱Controller.swift */,
+				67E549061F03DFBB001D25B7 /* 🖥Controller.swift */,
 				67FD9D7B1EFFB0F200DF4ABB /* Main.storyboard */,
 				67FD9D7E1EFFB0F200DF4ABB /* Assets.xcassets */,
 				67FD9D801EFFB0F200DF4ABB /* LaunchScreen.storyboard */,
@@ -200,6 +212,7 @@
 				67FD9D821EFFB0F200DF4ABB /* LaunchScreen.storyboard in Resources */,
 				67FD9D7F1EFFB0F200DF4ABB /* Assets.xcassets in Resources */,
 				67FD9D7D1EFFB0F200DF4ABB /* Main.storyboard in Resources */,
+				676B4DB12040CE3900F3C220 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,8 +224,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				673B6F931F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
-				67E549071F03DFBB001D25B7 /* 🖥Controller.swift in Sources */,
 				67E549051F03DFBB001D25B7 /* AppDelegate.swift in Sources */,
+				67437A12203A56100035E7C9 /* 🖥Controller.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -222,6 +235,7 @@
 			files = (
 				673B6F921F62CFFB009EFF82 /* DancingFingers.swift in Sources */,
 				67FD9D7A1EFFB0F200DF4ABB /* 📱Controller.swift in Sources */,
+				67437A10203A55CA0035E7C9 /* ForceDacningFingersGesture.swift in Sources */,
 				67FD9D781EFFB0F200DF4ABB /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

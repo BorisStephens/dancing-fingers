@@ -31,12 +31,14 @@ class MacViewController: NSViewController {
     @IBOutlet weak var labelDurationAttempt: NSTextField!
     @IBOutlet weak var labelExpectedFingerPositions: NSTextField!
     let Dancing = DancingFingers()
+    let aSynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
     
     
-    override func touchesBegan(with event: NSEvent) {
-        
+    func bringAlive(event: NSEvent){
         // Bring alive
         print("Bring Alive These bad boys")
+        
+//        aSynth.startSpeaking("Becoming alive")
         let touches = event.allTouches()
         touches.forEach { (touch) in
             
@@ -66,8 +68,11 @@ class MacViewController: NSViewController {
             let phase = phases["\(touch.phase.rawValue)"]!
             print(" 🖖+﹣ Finger\(closestTouch)  \(phase)")
         }
-        
+    }
+    
+    func newFingerCheck(event: NSEvent){
         // Check, New Finger
+        //aSynth.startSpeaking("New Finger Check")
         let allTouchesCount = event.allTouches().count
         // Instant Five Finger Detection
         if(allTouchesCount == 5 && CurrentTouchState.count < 5){
@@ -84,15 +89,29 @@ class MacViewController: NSViewController {
                 $0.touch.normalizedPosition.x < $1.touch.normalizedPosition.x
             }
         }
+    }
+    
+    func progressiveFingerAdd(event:NSEvent){
         
         // More than five or doing it progressivly
+        let allTouchesCount = event.allTouches().count
+
         if(CurrentTouchState.count < allTouchesCount){
             // New Finger Detected, Add To Tracker
+//            aSynth.startSpeaking("Progressive finger add")
             let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)
             touches.forEach({ (firstTouch) in
                 CurrentTouchState.append(BinaryFinger(alive: true, distance:0, touch: firstTouch))
             })
         }
+    }
+    
+    override func touchesBegan(with event: NSEvent) {
+        
+        self.bringAlive(event: event)
+        self.newFingerCheck(event: event)
+        self.progressiveFingerAdd(event: event)
+      
         doMagic()
     }
     
@@ -133,7 +152,7 @@ class MacViewController: NSViewController {
             doMagicKeyboardBareMinimum(parameterNumber: number)
         }
         
-        // Touches Ending and in the bottom left corner of Magic Trackpad
+        /* Touches Ending and in the bottom left corner of Magic Trackpad
         if touches.count == 1 {
             
             if touches.first!.pos(self.view).x < 40 {
@@ -146,6 +165,7 @@ class MacViewController: NSViewController {
                 }
             }
         }
+        */
     }
     
     func trackingDistance(tracking:BinaryFinger, touch:NSTouch) -> CGFloat{
@@ -281,7 +301,7 @@ class MacViewController: NSViewController {
         MagicNumber = number
         
         // Reading
-        if(parameterNumber == 30){ // Backspace
+        if(parameterNumber == 31){ // Backspace
             var outcome = self.testing.stringValue
             print("SPEAKING")
             if(SynthesizeVoice){
@@ -291,6 +311,14 @@ class MacViewController: NSViewController {
                 mySynth.startSpeaking(outcome)
             }
             return
+        }
+        
+        // Space
+        if parameterNumber == 30 {
+            let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+            mySynth.startSpeaking("Return Line")
+            self.testing.stringValue = "\(self.testing.stringValue)\n"
+            
         }
         
         // Space
@@ -319,6 +347,15 @@ class MacViewController: NSViewController {
                 }
                 return
             }
+        }
+
+        
+        // TODO: Move this somewhere where it will work
+        if number == 31 {
+            let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
+            
+            mySynth.startSpeaking("New Five Finger Positions ")
+            //newFingerCheck(event: event)
         }
         
         // Letters
@@ -394,6 +431,7 @@ class MacViewController: NSViewController {
             if(MagicMode == "KeyboardBasic"){
                 let number = self.Dancing.binaryFingerCalculation()
                 doMagicKeyboardBareMinimum(parameterNumber: number)
+                self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
             }
         }
         
@@ -490,7 +528,7 @@ class MacViewController: NSViewController {
     }
     
     func saveTime(textToSave:String){
-        DispatchQueue.main.asyncAfter(deadline: .now() + 40) {
+        DispatchQueue.main.asyncAfter(deadline: .now()) { // Used to be 40 seconds for performance reasons...
             // create the destination url for the text file to be saved
             let fileURL = documentDirectory.appendingPathComponent("file.txt")
             

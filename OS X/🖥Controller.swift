@@ -72,25 +72,104 @@ class MacViewController: NSViewController {
     
     func newFingerCheck(event: NSEvent){
         // Check, New Finger
-        //aSynth.startSpeaking("New Finger Check")
+        //aSynth.startSpeaking("Welcome, let us determine your hand")
+        
         let allTouchesCount = event.allTouches().count
         // Instant Five Finger Detection
-        if(allTouchesCount == 5 && CurrentTouchState.count < 5){
+        if(allTouchesCount == 5){//} && CurrentTouchState.count < 5){
             //startTime = NSDate()
             CurrentTouchState.removeAll()
             
-            // Load All
+            // Load All Fingers
             event.allTouches().forEach({ (firstTouch) in
-                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, touch: firstTouch))
+                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, anatomyLabel: "unknown", touch: firstTouch))
             })
             
             // Sort Horizontally
             CurrentTouchState = CurrentTouchState.sorted {
                 $0.touch.normalizedPosition.x < $1.touch.normalizedPosition.x
             }
+            
+            // Detect Hand
+            let hand = self.handDetection(touches: CurrentTouchState)
+            if(dextrousHandDetected != hand){
+                dextrousHandDetected = hand
+                aSynth.startSpeaking("\(hand) detected")
+                
+                // Label Anatomy
+                if(hand == "left"){
+                    CurrentTouchState[0].anatomyLabel = "pinky"
+                    CurrentTouchState[1].anatomyLabel = "ring"
+                    CurrentTouchState[2].anatomyLabel = "middle"
+                    CurrentTouchState[3].anatomyLabel = "index"
+                    CurrentTouchState[4].anatomyLabel = "thumb"
+                }
+                if(hand == "right"){
+                    CurrentTouchState[0].anatomyLabel = "thumb"
+                    CurrentTouchState[1].anatomyLabel = "index"
+                    CurrentTouchState[2].anatomyLabel = "middle"
+                    CurrentTouchState[3].anatomyLabel = "ring"
+                    CurrentTouchState[4].anatomyLabel = "pinky"
+                }
+                letterGuideVisual(letter: "a")
+            }
         }
     }
     
+    //MARK: 🖐 Hand Detection
+    var dextrousHandDetected = "none"
+    func handDetection(touches:Array<BinaryFinger>) -> String{
+        // Method: Thumb is further away from index finger than pinky is from ring
+        let hand:String!
+        let distanceFromSequence0to1 = touches[0].touch.normalizedPosition.distanceToPoint(p: touches[1].touch.normalizedPosition)
+        let distanceFromSequence4to3 = touches[3].touch.normalizedPosition.distanceToPoint(p: touches[4].touch.normalizedPosition)
+        if distanceFromSequence0to1 < distanceFromSequence4to3 {
+            hand = "left"
+        } else {
+            hand = "right"
+        }//print("👩🏻‍🔬 Method 2: \(dextrousHandDetected) ")
+        return hand
+    }
+    
+    //MARK: Wisp
+    func letterGuideVisual(letter:Character){
+        let string = "   abcdefghijklmnopqrstuvwxyz␡"
+        if let pos = string.index(of: letter) {
+            var sequence = String(pos, radix: 2).padReverseBinary(with: "0", toLength: 5).enumerated()
+            //var sequence = self.sequenceDerivedFromInteger(int: pos)
+            // Handle Space
+            if letter == " " {
+                sequence = String("01000").enumerated()
+            }
+            // Delete
+            if letter == "␡" {
+                sequence = String("10000").enumerated()
+            }
+            let fingerInterfaceSequences = CurrentTouchState
+            // (Ouput) Wisp : Show where to place fingers for letter
+            for (index,a) in sequence {
+                let button = UIAnatomy[index]
+                if(a == "1"){
+                    button?.backgroundColor = NSColor.white
+                    button?.textColor = NSColor.green
+                } else {
+                    button?.backgroundColor = NSColor.white
+                    button?.textColor = NSColor.gray
+                }
+            }
+            // (Ouput) Wisp : Speak where to place fingers for letter
+            var speak = ""
+            for (index,a) in sequence {
+                let button = fingerInterfaceSequences[index] as BinaryFinger
+                if(a == "1"){
+                    speak += " " + (button.anatomyLabel)
+                }
+            }
+            aSynth.startSpeaking("\(speak)")
+        }
+    }
+    
+    //MARK: ✌🏻 Process Fingers
     func progressiveFingerAdd(event:NSEvent){
         
         // More than five or doing it progressivly
@@ -101,7 +180,7 @@ class MacViewController: NSViewController {
 //            aSynth.startSpeaking("Progressive finger add")
             let touches = event.touches(matching: NSTouch.Phase.began, in: self.view)
             touches.forEach({ (firstTouch) in
-                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, touch: firstTouch))
+                CurrentTouchState.append(BinaryFinger(alive: true, distance:0, anatomyLabel: "unknown", touch: firstTouch))
             })
         }
     }
@@ -302,7 +381,7 @@ class MacViewController: NSViewController {
         
         // Reading
         if(parameterNumber == 31){ // Backspace
-            var outcome = self.testing.stringValue
+            let outcome = self.testing.stringValue
             print("SPEAKING")
             if(SynthesizeVoice){
                 let mySynth: NSSpeechSynthesizer = NSSpeechSynthesizer(voice: NSSpeechSynthesizer.defaultVoice)!
@@ -481,9 +560,21 @@ class MacViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.acceptsTouchEvents = true
+        // self.view.allowedTouchTypes = NSTouch.TouchType.direct
         saveTime(textToSave: "--- New Session Started --- \(Date().description)")
         // Do any additional setup after loading the view.
         self.view.wantsRestingTouches = true
+        
+        /* Fingers. User Interface */
+        for finger in 0...4 {
+            let text = NSText(frame: NSMakeRect(CGFloat(60*finger),50,60,10))
+                text.string = "Finger"
+                text.backgroundColor = NSColor.red
+                text.isEditable = false
+            UIAnatomy[finger] = text
+            self.view.addSubview(text)
+        }
+        
         /* Numbers Game, User Interface */
         for number in 1...15 {
             let text = NSText(frame: NSMakeRect(CGFloat(27*number),20,25,20))
@@ -512,6 +603,18 @@ class MacViewController: NSViewController {
 //        defaults.set("Josh", forKey: "name")
 //        print(defaults.string(forKey: "name") ?? "No saved name")
 
+        
+        /* Global World Things */
+//        let opts = NSDictionary(object: kCFBooleanTrue, forKey: kAXTrustedCheckOptionPrompt.takeUnretainedValue() as NSString) as CFDictionary
+//        guard AXIsProcessTrustedWithOptions(opts) == true else { return }
+        //NSEvent.addGlobalMonitorForEvents(matching: .keyDown, handler: self.handle)
+//        NSEvent.addGlobalMonitorForEvents(matching: .directTouch , handler: self.handle)
+        //NSEvent.mouseEvent(with: NSEvent.EventType.directTouch, location: NSPoint, modifierFlags: <#T##NSEvent.ModifierFlags#>, timestamp: <#T##TimeInterval#>, windowNumber: <#T##Int#>, context: <#T##NSGraphicsContext?#>, eventNumber: <#T##Int#>, clickCount: <#T##Int#>, pressure: <#T##Float#>)
+    }
+    
+    func handle(event:NSEvent){
+        print("Okay, this is really nutty!", event)
+        
     }
     
     override var representedObject: Any? {
@@ -607,7 +710,7 @@ extension NSTouch {
         let h = view.frame.size.height
         let touchPos:CGPoint = CGPoint(x:self.normalizedPosition.x,y:1 + (self.normalizedPosition.y * -1))/*flip the touch coordinates*/
         let deviceSize:CGSize = self.deviceSize
-        let deviceRatio:CGFloat = deviceSize.width/deviceSize.height/*find the ratio of the device*/
+        let deviceRatio:CGFloat = deviceSize.width/deviceSize.height/*find the ratio of the de                  vice*/
         let viewRatio:CGFloat = w/h
         var touchArea:CGSize = CGSize(width:w,height:h)
         /*Uniform-shrink the device to the view frame*/
@@ -623,4 +726,12 @@ extension NSTouch {
         return CGPoint(x: touchAreaPos.x + touchArea2.x, y:touchAreaPos.y + touchArea2.y)
     }
 }
+extension String {
+    func padReverseBinary(with character: String, toLength length: Int) -> String {
+        let padCount = length - self.count
+        guard padCount > 0 else { return String(self.reversed()) }
+        return String((String(repeating: character, count: padCount) + self).reversed())
+    }
+}
+
 // Reference: Position https://stackoverflow.com/questions/3573276/know-the-position-of-the-finger-in-the-trackpad-under-mac-os-x

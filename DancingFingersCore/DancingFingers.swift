@@ -19,6 +19,7 @@
 var UINumbersGame: Dictionary<Int, UILabel> = [:]
 var UILettersGame: Dictionary<Character, UILabel> = [:]
 #elseif os(OSX) // 🖥
+var UIAnatomy: Dictionary<Int, NSText> = [:]
 var UINumbersGame: Dictionary<Int, NSText> = [:]
 var UILettersGame: Dictionary<Character, NSText> = [:]
 #endif
@@ -28,6 +29,7 @@ struct BinaryFinger {
     
     var alive: Bool = false
     var distance:CGFloat = 0.00
+    var anatomyLabel:String = "unknown"
     
     #if os(iOS) || os(watchOS) || os(tvOS)
     let touch:UITouch
@@ -121,11 +123,11 @@ class DancingFingers{
             print("Current Binary Finger is \(number)")
             
             // Reset Refactor V2 // Set em all to dead
-            MagicState = .dormant
-            CurrentTouchState.enumerated().forEach({ (arg) in
-                let (index, _) = arg
-                CurrentTouchState[index].alive = false
-            })
+//            MagicState = .dormant
+//            CurrentTouchState.enumerated().forEach({ (arg) in
+//                let (index, _) = arg
+//                CurrentTouchState[index].alive = false
+//            })
             
             // Save Time
             // TEMP DISABLE: self.saveTime(textToSave:"\(number)\t\(self.labelDurationAttempt.stringValue)")
